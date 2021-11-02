@@ -7,7 +7,7 @@ const { asyncify, cleanup } = require("./asyncify");
 const loadPyodide = async (code) => {
   const pyodide_pkg = await import("pyodide/pyodide.js");
   return await pyodide_pkg.loadPyodide({
-    indexURL: "pyodide/",
+    indexURL: "lib_pyodide/",
   });
 };
 
@@ -34,7 +34,6 @@ expected_outputs = ${JSON.stringify(formattedTest.output)}`
 
   // prepare
   await py(out);
-
   const output = await py("run_tests()");
   console.log(JSON.parse(output));
 })();

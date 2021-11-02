@@ -9,6 +9,9 @@
   "keywords": [],
   "author": "Fran Zekan",
   "license": "ISC",
+  "scripts": {
+    "postinstall": "./setup_pyodide.sh"
+  },
   "dependencies": {
     "faker": "^5.5.3",
     "lodash": "^4.17.21",
