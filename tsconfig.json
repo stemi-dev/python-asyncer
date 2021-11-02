@@ -1,0 +1,8 @@
+{
+  "extends": "./node_modules/zeko369-tsconfig/configs/js/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/",
+    "noUncheckedIndexedAccess": false,
+    "resolveJsonModule": true
+  }
+}
