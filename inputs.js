@@ -2,6 +2,8 @@
  * @param {Record<string, any>} json
  */
 const formatInput = (json) => {
+  const faker = require("faker");
+
   const variables = Object.entries(json["variables"]).map(([key, value]) => {
     if (value.startsWith("faker.")) {
       return { key, value: eval(value).toString() };
