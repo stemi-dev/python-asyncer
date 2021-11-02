@@ -1,0 +1,22 @@
+{
+  "variables": {
+    "x": "faker.datatype.number({min: 0, max: 100})",
+    "y": "faker.datatype.number({min: 0, max: 100})",
+    "name": "faker.name.firstName()",
+    "age": "faker.datatype.number({min: 15, max: 50})"
+  },
+  "inputs": ["$x", "$y", "$age", "$name"],
+  "outputs": [
+    "calc($x + $y)",
+    "calc($x + $y)",
+    "calc($x + $y)",
+    "Your age is: $age",
+    "Hello $name",
+    "/\\w+ $name/"
+  ],
+  "defined": {
+    "name": "$name",
+    "c": "calc($x + $y)",
+    "c2": "calc($x * $y)"
+  }
+}
