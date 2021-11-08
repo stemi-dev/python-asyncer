@@ -1,3 +1,7 @@
+./index.d.ts
+
+scripts/
+dist/
 lib/
 example/
 pyodide/
@@ -7,7 +11,3 @@ setup_pyodide.sh
 tmp.py
 
 tsconfig*
-
-build.js
-publish.js
-index.d.ts
