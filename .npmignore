@@ -7,3 +7,7 @@ setup_pyodide.sh
 tmp.py
 
 tsconfig*
+
+build.js
+publish.js
+index.d.ts
