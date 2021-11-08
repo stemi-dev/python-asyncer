@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declarationDir": "./dist/browser"
+    // "declarationMap": true,
+    // "sourceMap": true,
+    // "sourceRoot": "./lib",
+    // "outFile": "./dist/browser/index.js"
+  },
+  "exclude": ["./example", "./pyodide", "./dist", "./foo.*", "./build.js"]
+}

@@ -12,19 +12,25 @@
   "scripts": {
     "example:test": "ts-node ./example/tests/index.ts",
     "example:all": "ts-node ./example/pyodide.ts",
-    "build": "yarn tsc",
+    "build:ts-node": "yarn tsc -P tsconfig.node.json",
+    "build:ts-browser": "yarn tsc -P tsconfig.browser.json",
+    "build": "node build.js && yarn build:ts-node && yarn build:ts-browser",
     "postinstall": "./setup_pyodide.sh"
   },
   "dependencies": {
     "faker": "^5.5.3",
-    "lodash": "^4.17.21",
-    "pyodide": "^0.18.2"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/faker": "^5.5.9",
     "@types/lodash": "^4.14.176",
     "@types/node": "^16.11.6",
+    "@types/rimraf": "^3.0.2",
+    "browserslist-to-esbuild": "^1.0.1",
+    "esbuild": "^0.13.12",
     "nodemon": "^2.0.14",
+    "pyodide": "^0.18.2",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
     "typescript": "^4.4.4",
     "zeko369-tsconfig": "^2.1.1"

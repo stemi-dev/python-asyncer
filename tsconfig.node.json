@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declarationDir": "./dist/node"
+  },
+  "exclude": ["./example", "./pyodide", "./dist", "./foo.*", "./build.js"]
+}

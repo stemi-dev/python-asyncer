@@ -2,3 +2,5 @@ node_modules/
 pyodide/
 .npmrc
 output/
+
+dist/
