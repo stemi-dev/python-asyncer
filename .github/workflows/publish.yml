@@ -1,11 +1,11 @@
-name: Node.js Package
+name: Publish to Github packages
 
 on:
   release:
     types: [created]
 
 jobs:
-  publish-gpr:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       packages: write
