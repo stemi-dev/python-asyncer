@@ -1,15 +1,17 @@
-const { INDENTS } = require("./const");
-const { space, cleanup, formatTestData } = require("./utils");
+import { INDENTS } from "./const";
+import { space, cleanup, formatTestData } from "./utils";
+import { GeneratedTest } from "./generateTest";
 
-const globals = require("./templates/globals");
-const tests = require("./templates/tests");
+import { globals, tests } from "./templates";
+
+export type AsyncifyENV = "native" | "browser";
 
 /**
  * @param {string} raw
- * @param {'native' | 'browser'} env
- * @param {{input: string[], output: string[], defined: Record<string, string>} | undefined} testData
+ * @param {AsyncifyENV} env
+ * @param {GeneratedTest | undefined} testData
  */
-const asyncify = async (raw, env, testData = undefined) => {
+export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest) => {
   const lines = cleanup(raw);
 
   // detect indents
@@ -25,7 +27,7 @@ const asyncify = async (raw, env, testData = undefined) => {
   // TODO: check if it's valid python
 
   const functionsToAwait = ["input"];
-  parsed.forEach((line, index) => {
+  parsed.forEach((line) => {
     if (line.startOfBlock) {
       if (line.line.startsWith("def")) {
         functionsToAwait.push(line.line.split(" ")[1].slice(0, -2));
@@ -35,7 +37,7 @@ const asyncify = async (raw, env, testData = undefined) => {
     }
   });
 
-  const parsed2 = parsed.map((line, index) => {
+  const withAsyncAwait = parsed.map((line, index) => {
     // if is def of a function add async before
     if (line.line.startsWith("def") && line.startOfBlock) {
       return {
@@ -57,7 +59,7 @@ const asyncify = async (raw, env, testData = undefined) => {
     ["print(", "custom_print("],
     ["input(", "custom_input("],
   ];
-  const parsed3 = parsed2.map((line) => {
+  const withCustomSTDIO = withAsyncAwait.map((line) => {
     replaces.forEach(([from, to]) => {
       if (line.line.includes(from)) {
         line.line = line.line.replace(from, to);
@@ -67,21 +69,19 @@ const asyncify = async (raw, env, testData = undefined) => {
     return line;
   });
 
-  const wrappedIntoFunction = [
+  const final = [
     ...globals[env].split("\n"),
     "async def func():",
-    ...parsed3.map((p) => `${space(p.indent + INDENTS)}${p.line}`),
+    ...withCustomSTDIO.map((p) => `${space(p.indent + INDENTS)}${p.line}`),
     `${space(INDENTS)}return locals()`,
     "\n",
     ...tests[env].split("\n"),
   ];
 
-  const out = wrappedIntoFunction.join("\n");
+  const output = final.join("\n");
   if (testData) {
-    return out.replace("$__DATA__$", formatTestData(testData));
+    return output.replace("$__DATA__$", formatTestData(testData));
   }
 
-  return out;
+  return output;
 };
-
-module.exports = { cleanup, asyncify };

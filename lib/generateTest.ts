@@ -1,7 +1,12 @@
-/**
- * @param {Record<string, any>} json
- */
-const generateTest = (json, faker) => {
+export type GeneratedTest = {
+  input: string[];
+  output: string[];
+  defined: Record<string, string>;
+};
+
+export type TemplateTests = GeneratedTest & { variables: Record<string, string> };
+
+export const generateTest = (json: TemplateTests, faker: unknown): GeneratedTest => {
   const variables = Object.entries(json["variables"]).map(([key, value]) => {
     if (value.startsWith("faker.")) {
       return { key, value: eval(value).toString() };
@@ -10,7 +15,7 @@ const generateTest = (json, faker) => {
     return { key, value };
   });
 
-  const replaceWithString = (str) => {
+  const replaceWithString = (str: string) => {
     variables.forEach((variable) => {
       str = str.replace(new RegExp(`\\$${variable.key}`, "g"), variable.value);
     });
@@ -27,12 +32,10 @@ const generateTest = (json, faker) => {
   };
 
   return {
-    input: decorateWithVariables(json, "inputs"),
-    output: decorateWithVariables(json, "outputs"),
+    input: decorateWithVariables(json, "input"),
+    output: decorateWithVariables(json, "output"),
     defined: Object.fromEntries(
       Object.entries(json["defined"]).map(([k, v]) => [k, replaceWithString(v)])
     ),
   };
 };
-
-module.exports = { generateTest };

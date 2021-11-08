@@ -10,6 +10,9 @@
   "author": "Fran Zekan",
   "license": "ISC",
   "scripts": {
+    "example:test": "ts-node ./example/tests/index.ts",
+    "example:all": "ts-node ./example/pyodide.ts",
+    "build": "yarn tsc",
     "postinstall": "./setup_pyodide.sh"
   },
   "dependencies": {
@@ -22,6 +25,7 @@
     "@types/lodash": "^4.14.176",
     "@types/node": "^16.11.6",
     "nodemon": "^2.0.14",
+    "ts-node": "^10.4.0",
     "typescript": "^4.4.4",
     "zeko369-tsconfig": "^2.1.1"
   }

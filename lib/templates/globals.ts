@@ -1,4 +1,4 @@
-module.exports = {
+export const globals = {
   native: `import json
 async def custom_input(prompt: str):
   return input(prompt)

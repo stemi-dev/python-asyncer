@@ -5,8 +5,8 @@
     "name": "faker.name.firstName()",
     "age": "faker.datatype.number({min: 15, max: 50})"
   },
-  "inputs": ["$x", "$y", "$age", "$name"],
-  "outputs": [
+  "input": ["$x", "$y", "$age", "$name"],
+  "output": [
     "calc($x + $y)",
     "calc($x + $y)",
     "calc($x + $y)",
