@@ -27,9 +27,9 @@ const pkg = require("./package.json");
 
   const message = `"New release ${newVersion}"`;
 
-  zx.$`git add package.json`;
-  zx.$`git commit -m ${message}`;
-  zx.$`git push`;
-  zx.$`gh release create v${newVersion} --notes ${message}`;
-  zx.$`git push`;
+  await zx.$`git add package.json`;
+  await zx.$`git commit -m ${message}`;
+  await zx.$`git push`;
+  await zx.$`gh release create v${newVersion} --notes ${message}`;
+  await zx.$`git push`;
 })();

@@ -18,7 +18,8 @@
     "example:all": "ts-node ./example/pyodide.ts",
     "build:ts-node": "yarn tsc -P tsconfig.node.json",
     "build:ts-browser": "yarn tsc -P tsconfig.browser.json",
-    "build": "node build.js && yarn build:ts-node && yarn build:ts-browser"
+    "build": "node build.js && yarn build:ts-node && yarn build:ts-browser",
+    "up": "node publish.js patch"
   },
   "dependencies": {
     "faker": "^5.5.3",
