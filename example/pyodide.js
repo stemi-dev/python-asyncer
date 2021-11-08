@@ -1,13 +1,14 @@
 const { join } = require("path");
 const { readFile, writeFile } = require("fs/promises");
+const faker = require('faker');
 
-const formatInput = require("./inputs");
-const { asyncify, cleanup } = require("./asyncify");
+const formatInput = require("../lib/testGenerator");
+const { asyncify, cleanup } = require("../lib/asyncify");
 
-const loadPyodide = async (code) => {
+const loadPyodide = async () => {
   const pyodide_pkg = await import("pyodide/pyodide.js");
   return await pyodide_pkg.loadPyodide({
-    indexURL: "lib_pyodide/",
+    indexURL: "pyodide/",
   });
 };
 
@@ -16,11 +17,11 @@ const asyncPython = (pyodide) => (code) => {
 };
 
 (async () => {
-  const test = require("./test.json");
-  const formattedTest = formatInput(test);
+  const test = require("./input.json");
+  const formattedTest = formatInput(test, faker);
 
   const code = await readFile(join(__dirname, "example.py"), "utf8");
-  let out = await asyncify(cleanup(code), "_test_browser");
+  let out = await asyncify(cleanup(code), "browser");
   out = out.replace(
     "$__DATA__$",
     `inputs = ${JSON.stringify(formattedTest.input)}
@@ -36,4 +37,5 @@ expected_outputs = ${JSON.stringify(formattedTest.output)}`
   await py(out);
   const output = await py("run_tests()");
   console.log(JSON.parse(output));
+  // console.log(JSON.parse(output).filter((a) => !a.test_pass));
 })();

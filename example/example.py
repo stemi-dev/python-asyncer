@@ -3,9 +3,9 @@ Your task is foobar
 """
 
 
-def pero():
+async def pero():
     age = int(input("Enter your age: "))
-    print("Your age is:", age + 1)
+    print("Your age is:", age)  # + 1)
 
 
 a = int(input('a'))
@@ -23,6 +23,6 @@ if 1 == 2:
 
 pero()
 
-name = input('name') + '1'
+name = input('name')  # + '1'
 print(f"Hello {name}")
 print(f"Bok {name}")

@@ -1,9 +1,9 @@
 const { join } = require("path");
 const { readdir, mkdir, readFile, writeFile } = require("fs/promises");
-const { cleanup, asyncify } = require("./asyncify");
+const { cleanup, asyncify } = require("../lib/asyncify");
 
 (async () => {
-  const files = await readdir(join(__dirname, "../python-simple-curriculum/pizza"));
+  const files = await readdir(join(__dirname, "../../python-simple-curriculum/pizza"));
   try {
     await readdir(join(__dirname, "./output"));
   } catch (err) {
@@ -15,12 +15,12 @@ const { cleanup, asyncify } = require("./asyncify");
 
   for (const file of files) {
     const content = await readFile(
-      join(__dirname, "../python-simple-curriculum/pizza", file),
+      join(__dirname, "../../python-simple-curriculum/pizza", file),
       "utf8"
     );
 
     const lines = cleanup(content);
-    const output = await asyncify(lines);
+    const output = await asyncify(lines, 'native');
 
     await writeFile(join(__dirname, "./output", file), output);
   }
