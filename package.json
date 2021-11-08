@@ -6,7 +6,7 @@
   "publishConfig": {
     "@stemi-dev:registry": "https://npm.pkg.github.com"
   },
-  "version": "1.0.4",
+  "version": "1.0.3",
   "description": "Package used for generating tests for the python runner + converting python code to async to be run in the browser",
   "browser": "dist/browser/index.js",
   "main": "dist/node/index.js",
