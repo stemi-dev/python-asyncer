@@ -3,6 +3,9 @@
   "repository": {
     "url": "git://github.com/stemi-dev/python-asyncer"
   },
+  "publishConfig": {
+    "@stemi-dev:registry": "https://npm.pkg.github.com"
+  },
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
