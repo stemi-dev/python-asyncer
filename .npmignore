@@ -1,0 +1,8 @@
+example/
+pyodide/
+.idea
+.github
+setup_pyodide.sh
+tmp.py
+
+tsconfig*
