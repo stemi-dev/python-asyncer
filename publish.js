@@ -31,4 +31,5 @@ const pkg = require("./package.json");
   zx.$`git commit -m ${message}`;
   zx.$`git push`;
   zx.$`gh release create v${newVersion} --notes ${message}`;
+  zx.$`git push`;
 })();
