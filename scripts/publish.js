@@ -23,7 +23,7 @@ const pkg = require("../package.json");
   // @ts-ignore
   pkg.version = newVersion;
 
-  await fs.writeFile(join(__dirname, "./package.json"), JSON.stringify(pkg, null, 2));
+  await fs.writeFile(join(__dirname, "../package.json"), JSON.stringify(pkg, null, 2));
 
   const message = `"New release ${newVersion}"`;
 
