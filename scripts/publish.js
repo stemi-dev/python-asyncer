@@ -1,8 +1,8 @@
 const zx = require("zx");
 const fs = require("fs/promises");
-const { parse, inc } = require("semver");
+const { inc } = require("semver");
 
-const pkg = require("./package.json");
+const pkg = require("../package.json");
 
 (async () => {
   if (process.argv.length !== 3) {
@@ -23,7 +23,7 @@ const pkg = require("./package.json");
   // @ts-ignore
   pkg.version = newVersion;
 
-  await fs.writeFile("./package.json", JSON.stringify(pkg, null, 2));
+  await fs.writeFile(join(__dirname, "./package.json"), JSON.stringify(pkg, null, 2));
 
   const message = `"New release ${newVersion}"`;
 

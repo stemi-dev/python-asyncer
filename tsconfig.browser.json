@@ -7,5 +7,5 @@
     // "sourceRoot": "./lib",
     // "outFile": "./dist/browser/index.js"
   },
-  "exclude": ["./example", "./pyodide", "./dist", "./foo.*", "./build.js", "./publish.js"]
+  "exclude": ["./example", "./pyodide", "./dist", "./scripts"]
 }

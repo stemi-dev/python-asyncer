@@ -8,12 +8,12 @@ const browserslistToEsbuild = require("browserslist-to-esbuild");
  * @type {import('esbuild').BuildOptions}
  */
 const shared = {
-  entryPoints: ["./lib/index.ts"],
+  entryPoints: [join(__dirname, "../lib/index.ts")],
   bundle: true,
 };
 
 (async () => {
-  rimraf.sync(join(__dirname, "./dist"));
+  rimraf.sync(join(__dirname, "../dist"));
 
   await Promise.all([
     esbuild.build({
@@ -21,14 +21,14 @@ const shared = {
       minify: true,
       sourcemap: true,
       target: browserslistToEsbuild(),
-      outfile: "dist/browser/index.js",
+      outfile: join(__dirname, "../dist/browser/index.js"),
     }),
 
     esbuild.build({
       ...shared,
       platform: "node",
       target: ["node14"],
-      outfile: "dist/node/index.js",
+      outfile: join(__dirname, "../dist/node/index.js"),
     }),
   ]);
 })();
