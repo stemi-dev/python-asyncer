@@ -1,6 +1,8 @@
-const zx = require("zx");
+const { join } = require("path");
 const fs = require("fs/promises");
+
 const { inc } = require("semver");
+const zx = require("zx");
 
 const pkg = require("../package.json");
 
