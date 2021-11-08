@@ -1,9 +1,8 @@
 const { join } = require("path");
 const { readFile, writeFile } = require("fs/promises");
-const faker = require('faker');
+const faker = require("faker");
 
-const formatInput = require("../lib/testGenerator");
-const { asyncify, cleanup } = require("../lib/asyncify");
+const { asyncify, generateTest } = require("../lib");
 
 const loadPyodide = async () => {
   const pyodide_pkg = await import("pyodide/pyodide.js");
@@ -17,18 +16,10 @@ const asyncPython = (pyodide) => (code) => {
 };
 
 (async () => {
-  const test = require("./input.json");
-  const formattedTest = formatInput(test, faker);
-
+  const testData = generateTest(require("./input.json"), faker);
   const code = await readFile(join(__dirname, "example.py"), "utf8");
-  let out = await asyncify(cleanup(code), "browser");
-  out = out.replace(
-    "$__DATA__$",
-    `inputs = ${JSON.stringify(formattedTest.input)}
-expected_definitions = ${JSON.stringify(formattedTest.defined)}
-expected_outputs = ${JSON.stringify(formattedTest.output)}`
-  );
 
+  const out = await asyncify(code, "browser", testData);
   await writeFile("./tmp.py", out);
 
   const py = asyncPython(await loadPyodide());

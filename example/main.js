@@ -1,6 +1,6 @@
 const { join } = require("path");
 const { readdir, mkdir, readFile, writeFile } = require("fs/promises");
-const { cleanup, asyncify } = require("../lib/asyncify");
+const { asyncify } = require("../lib");
 
 (async () => {
   const files = await readdir(join(__dirname, "../../python-simple-curriculum/pizza"));
@@ -19,8 +19,7 @@ const { cleanup, asyncify } = require("../lib/asyncify");
       "utf8"
     );
 
-    const lines = cleanup(content);
-    const output = await asyncify(lines, 'native');
+    const output = await asyncify(content, "native");
 
     await writeFile(join(__dirname, "./output", file), output);
   }

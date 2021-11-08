@@ -1,7 +1,5 @@
-const faker = require('faker');
-const formatInput = require('../../lib/testGenerator');
+const faker = require("faker");
+const { generateTest } = require("../../lib");
 
-const t = require('../input.json');
-
-const out = formatInput(t, faker);
-console.log(out)
+const out = generateTest(require("../input.json"), faker);
+console.log(out);
