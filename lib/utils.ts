@@ -7,6 +7,8 @@ export const space = (n: number) => {
 };
 
 export const cleanup = (code: string) => {
+  code = code.replace(/\\n/g, "\\\\n");
+
   const tmp = code.split('"""');
   const out: string[] = [];
   for (let i = 0; i < tmp.length; i++) {

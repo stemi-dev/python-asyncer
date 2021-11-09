@@ -1,11 +1,12 @@
 import { AsyncifyENV } from "../asyncify";
+import { STDIO_NAMES } from "../const";
 
 export const globals: Record<AsyncifyENV, string> = {
-  native: `async def custom_input(prompt: str):
+  native: `async def ${STDIO_NAMES.input}(prompt: str):
   return input(prompt)
 
 
-async def custom_print(*args, **kwargs):
+async def ${STDIO_NAMES.print}(*args, **kwargs):
   print(*args, **kwargs)`,
   browser: ``,
   tests: `
@@ -14,12 +15,12 @@ $__DATA__$
 outputs = []
 
 
-async def custom_input(prompt: str):
+async def ${STDIO_NAMES.input}(prompt: str):
     global index
     index += 1
     return inputs[index]
 
 
-def custom_print(*args, **kwargs):
+def ${STDIO_NAMES.print}(*args, **kwargs):
     outputs.append(args)`,
 };

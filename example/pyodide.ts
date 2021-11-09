@@ -20,12 +20,13 @@ const asyncPython = (pyodide: Pyodide) => {
 };
 
 (async () => {
-  const testData = generateTest(require("./input.json"), faker);
-  const code = await readFile(join(__dirname, "example.py"), "utf8");
+  const testData = generateTest(require("./foo.json"), faker);
+  const code = await readFile(join(__dirname, "foo.py"), "utf8");
 
-  const out = asyncify(code, "browser", testData);
+  const out = asyncify(code, "tests", testData);
   await writeFile("./tmp.py", out);
 
+  process.exit(0);
   const py = asyncPython(await loadPyodide());
 
   console.log("here");

@@ -1,13 +1,13 @@
 import { AsyncifyENV } from "../asyncify";
-import { MAIN_FUNTION } from "../const";
+import { MAIN_FUNTION, INTERNAL_FUNC_NAME_USER_CODE } from "../const";
 
 export const run: Record<AsyncifyENV, string> = {
   native: `def ${MAIN_FUNTION}():
   loop = asyncio.get_event_loop()
-  defines = loop.run_until_complete(func())
+  defines = loop.run_until_complete(${INTERNAL_FUNC_NAME_USER_CODE}())
   loop.close()`,
   browser: `async def ${MAIN_FUNTION}():
-  await func()`,
+  await ${INTERNAL_FUNC_NAME_USER_CODE}()`,
   tests: `class Result:
     def __init__(self, test_pass, test_type, comment=None):
         self.test_pass = test_pass
@@ -19,7 +19,7 @@ export const run: Record<AsyncifyENV, string> = {
   
   
 async def ${MAIN_FUNTION}():
-    defines = await func()
+    defines = await ${INTERNAL_FUNC_NAME_USER_CODE}()
 
     results = []
     for key in expected_definitions:
