@@ -1,18 +1,24 @@
-export const tests = {
-  native: `loop = asyncio.get_event_loop()
-defines = loop.run_until_complete(func())
-loop.close()`,
-  browser: `class Result:
+import { AsyncifyENV } from "../asyncify";
+import { MAIN_FUNTION } from "../const";
+
+export const run: Record<AsyncifyENV, string> = {
+  native: `def ${MAIN_FUNTION}():
+  loop = asyncio.get_event_loop()
+  defines = loop.run_until_complete(func())
+  loop.close()`,
+  browser: `async def ${MAIN_FUNTION}():
+  await func()`,
+  tests: `class Result:
     def __init__(self, test_pass, test_type, comment=None):
         self.test_pass = test_pass
         self.type = test_type
         self.comment = comment
 
-    def to_json(self):
+    def to_dict(self):
         return {"test_pass": self.test_pass, "type": self.type, "comment": self.comment}
   
   
-async def run_tests():
+async def ${MAIN_FUNTION}():
     defines = await func()
 
     results = []
@@ -45,5 +51,5 @@ async def run_tests():
             else:
                 results.append(Result(True, 'match', 'index[{i}]: "{a}" is correct'))
 
-    return json.dumps(list(map(lambda x: x.to_json(), results)))`,
+    return json.dumps(list(map(lambda x: x.to_dict(), results)))`,
 };

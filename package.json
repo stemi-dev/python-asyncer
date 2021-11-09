@@ -25,6 +25,9 @@
     "faker": "^5.5.3",
     "lodash": "^4.17.21"
   },
+  "peerDependencies": {
+    "@types/faker": "5.5.9"
+  },
   "devDependencies": {
     "@types/faker": "^5.5.9",
     "@types/lodash": "^4.14.176",

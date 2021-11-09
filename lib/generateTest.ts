@@ -6,7 +6,7 @@ export type GeneratedTest = {
 
 export type TemplateTests = GeneratedTest & { variables: Record<string, string> };
 
-export const generateTest = (json: TemplateTests, faker: unknown): GeneratedTest => {
+export const generateTest = (json: TemplateTests, faker: Faker.FakerStatic): GeneratedTest => {
   const variables = Object.entries(json["variables"]).map(([key, value]) => {
     if (value.startsWith("faker.")) {
       return { key, value: eval(value).toString() };

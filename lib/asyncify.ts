@@ -1,17 +1,23 @@
-import { INDENTS } from "./const";
+import { INDENTS, INTERNAL_FUNC_NAME_USER_CODE, STDIO_NAMES } from "./const";
 import { space, cleanup, formatTestData } from "./utils";
 import { GeneratedTest } from "./generateTest";
 
-import { globals, tests } from "./templates";
+import { globals, shared, run } from "./templates";
 
-export type AsyncifyENV = "native" | "browser";
+export type AsyncifyENV = "native" | "browser" | "tests";
 
 /**
  * @param {string} raw
  * @param {AsyncifyENV} env
  * @param {GeneratedTest | undefined} testData
+ *
+ * @throws {Error} if user code contains INTERNAL_FUNC_NAME_USER_CODE
  */
 export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest) => {
+  if (raw.includes(INTERNAL_FUNC_NAME_USER_CODE)) {
+    throw new Error(`User code can't contain ${INTERNAL_FUNC_NAME_USER_CODE}`);
+  }
+
   const lines = cleanup(raw);
 
   // detect indents
@@ -56,8 +62,8 @@ export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest
   });
 
   const replaces = [
-    ["print(", "custom_print("],
-    ["input(", "custom_input("],
+    ["print(", `${STDIO_NAMES.print}(`],
+    ["input(", `${STDIO_NAMES.input}(`],
   ];
   const withCustomSTDIO = withAsyncAwait.map((line) => {
     replaces.forEach(([from, to]) => {
@@ -69,16 +75,20 @@ export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest
     return line;
   });
 
-  const final = [
-    ...globals[env].split("\n"),
-    "async def func():",
-    ...withCustomSTDIO.map((p) => `${space(p.indent + INDENTS)}${p.line}`),
-    `${space(INDENTS)}return locals()`,
-    "\n",
-    ...tests[env].split("\n"),
-  ];
+  const functionCode = withCustomSTDIO
+    .map((p) => `${space(p.indent + INDENTS)}${p.line}`)
+    .join("\n");
 
-  const output = final.join("\n");
+  const output = `
+${shared}
+${globals[env]}
+
+async def ${INTERNAL_FUNC_NAME_USER_CODE}():
+${functionCode}
+${space(INDENTS)}return locals()
+
+${run[env]}`.trim();
+
   if (testData) {
     return output.replace("$__DATA__$", formatTestData(testData));
   }

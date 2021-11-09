@@ -3,10 +3,11 @@ import { readFile, writeFile } from "fs/promises";
 import faker from "faker";
 
 import { asyncify, generateTest } from "../lib";
-import { Pyodide } from "../type";
+import { MAIN_FUNTION } from "../lib/const";
+import { Pyodide } from "./type";
 
 const loadPyodide = async () => {
-  const pyodide_pkg = await import("pyodide/pyodide.js");
+  const pyodide_pkg = await eval(`import("pyodide/pyodide.js")`);
   return await pyodide_pkg.loadPyodide({
     indexURL: "pyodide/",
   });
@@ -27,9 +28,11 @@ const asyncPython = (pyodide: Pyodide) => {
 
   const py = asyncPython(await loadPyodide());
 
+  console.log("here");
+
   // prepare
   await py(out);
 
-  const output = JSON.parse(await py<string>("run_tests()"));
+  const output = JSON.parse(await py<string>(`${MAIN_FUNTION}()`));
   console.log(output);
 })();

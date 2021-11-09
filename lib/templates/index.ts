@@ -1,2 +1,5 @@
 export { globals } from "./globals";
-export { tests } from "./tests";
+export { run } from "./run";
+
+export const shared = `import json
+import re`;
