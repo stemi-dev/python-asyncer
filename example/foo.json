@@ -1,0 +1,21 @@
+{
+  "variables": {
+    "name": "faker.name.firstName()",
+    "var": "a"
+  },
+  "test": [
+    { "out": "Bok!" },
+    { "in": "$name" },
+    { "out": "/$name/" },
+    { "out": "/a\\..*/" },
+    { "out": "/b\\..*/" },
+    { "in": "$var" },
+    { "out": "/.*: $var/" },
+    { "out": "/.*/" },
+    { "out": "/1\\..*/" },
+    { "out": "/2\\..*/" }
+  ],
+  "defined": {
+    "imeOsobe": "$name"
+  }
+}
