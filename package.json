@@ -6,7 +6,7 @@
   "publishConfig": {
     "@stemi-dev:registry": "https://npm.pkg.github.com"
   },
-  "version": "1.0.11",
+  "version": "1.1.0",
   "description": "Package used for generating tests for the python runner + converting python code to async to be run in the browser",
   "keywords": [],
   "author": "Fran Zekan",
@@ -19,7 +19,8 @@
     "build": "node ./scripts/build.js && yarn build:ts-node && yarn build:ts-browser",
     "build:publish": "yarn build && node ./scripts/cleanup.js",
     "clean": "rimraf node browser dist",
-    "up": "yarn clean && node ./scripts/publish.js patch"
+    "up": "yarn clean && node ./scripts/publish.js patch",
+    "up:minor": "yarn clean && node ./scripts/publish.js minor"
   },
   "dependencies": {
     "faker": "^5.5.3",
