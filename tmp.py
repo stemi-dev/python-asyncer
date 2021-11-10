@@ -2,9 +2,9 @@ import json
 import re
 
 index = -1
-inputs = ["Brody","a"]
-expected_definitions = {"imeOsobe":"Brody"}
-expected_outputs = ["Bok!","/Brody/","/a\\..*/","/b\\..*/","/.*: a/","/.*/","/1\\..*/","/2\\..*/"]
+inputs = ["Yazmin","a"]
+expected_definitions = {"imeOsobe":"Yazmin"}
+expected_outputs = ["Bok!","/Yazmin/","/a\\..*/","/b\\..*/","/.*: a/","/.*/","/\\[.*,.*\\]/"]
 outputs = []
 
 

@@ -45,11 +45,11 @@ async def ${MAIN_FUNTION}():
                 if match is None:
                     results.append(Result(False, 'match', f'index[{i}]: REGEX "{a}" does not match "{b}"'))
                 else:
-                    results.append(Result(True, 'match', 'index[{i}]: "{a}" is correct'))
+                    results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct'))
             elif a != b:
                 results.append(Result(False, 'match', f'index[{i}]: "{a}" does not match "{b}"'))
             else:
-                results.append(Result(True, 'match', 'index[{i}]: "{a}" is correct'))
+                results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct'))
 
     return json.dumps(list(map(lambda x: x.to_dict(), results)))`,
 };

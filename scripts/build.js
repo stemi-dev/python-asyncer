@@ -20,7 +20,8 @@ const shared = {
       ...shared,
       minify: true,
       sourcemap: true,
-      target: browserslistToEsbuild(),
+      platform: "browser",
+      target: "es2016",
       outfile: join(__dirname, "../dist/browser/index.js"),
     }),
 
