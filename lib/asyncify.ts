@@ -1,4 +1,4 @@
-import { INTERNAL_FUNC_NAME_USER_CODE, STDIO_NAMES } from "./const";
+import { INTERNAL_FUNC_NAME_USER_CODE } from "./const";
 import { space, cleanup, formatTestData } from "./utils";
 import { GeneratedTest } from "./generateTest";
 import { polyfills, shared, run } from "./templates";
@@ -26,7 +26,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
   }
 
   const finalConfig = { ...defaultConfig, ...config };
-  const { env, indents, maxIterations } = finalConfig;
+  const { env, indents, maxIterations, stdioInput, stdioOutput } = finalConfig;
 
   console.log(finalConfig);
 
@@ -97,8 +97,8 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
   }, []);
 
   const replaces = [
-    ["print(", `${STDIO_NAMES.print}(`],
-    ["input(", `${STDIO_NAMES.input}(`],
+    ["print(", `${stdioOutput}(`],
+    ["input(", `${stdioInput}(`],
   ];
   const withCustomSTDIO = withLoopLimiters.map((line) => {
     replaces.forEach(([from, to]) => {
