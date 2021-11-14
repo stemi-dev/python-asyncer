@@ -116,7 +116,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
 
   const output = `
 ${shared}
-${polyfills[env]}
+${polyfills[env]({ input: stdioInput, print: stdioOutput })}
 
 async def ${INTERNAL_FUNC_NAME_USER_CODE}():
 ${functionCode}

@@ -1,26 +1,25 @@
 import { AsyncifyENV } from "../asyncify";
-import { STDIO_NAMES } from "../const";
 
-export const polyfills: Record<AsyncifyENV, string> = {
-  native: `async def ${STDIO_NAMES.input}(prompt: str):
+export const polyfills: Record<AsyncifyENV, ({ input, print }) => string> = {
+  native: ({ input, print }) => `async def ${input}(prompt: str):
   return input(prompt)
 
 
-async def ${STDIO_NAMES.print}(*args, **kwargs):
+async def ${print}(*args, **kwargs):
   print(*args, **kwargs)`,
-  browser: ``,
-  tests: `
+  browser: () => ``,
+  tests: ({ input, print }) => `
 index = -1
 $__DATA__$
 outputs = []
 
 
-async def ${STDIO_NAMES.input}(prompt: str):
+async def ${input}(prompt: str):
     global index
     index += 1
     return inputs[index]
 
 
-def ${STDIO_NAMES.print}(*args, **kwargs):
+def ${print}(*args, **kwargs):
     outputs.append(args)`,
 };
