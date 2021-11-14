@@ -17,8 +17,7 @@
     "example:build": "ts-node ./example/build.ts",
     "build:ts": "yarn tsc -P tsconfig.node.json",
     "build": "node ./scripts/build.js && yarn build:ts",
-    "build:publish": "yarn build && node ./scripts/cleanup.js",
-    "clean": "rimraf node browser dist",
+    "clean": "node ./scripts/cleanup.js",
     "up": "yarn clean && node ./scripts/publish.js patch",
     "up:minor": "yarn clean && node ./scripts/publish.js minor",
     "up:major": "yarn clean && node ./scripts/publish.js major"
