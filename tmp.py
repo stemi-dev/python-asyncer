@@ -2,9 +2,9 @@ import json
 import re
 
 index = -1
-inputs = ["Yazmin","a"]
-expected_definitions = {"imeOsobe":"Yazmin"}
-expected_outputs = ["Bok!","/Yazmin/","/a\\..*/","/b\\..*/","/.*: a/","/.*/","/\\[.*,.*\\]/"]
+inputs = ["60","7","31","Katlynn"]
+expected_definitions = {"name":"Katlynn","c":67,"c2":420}
+expected_outputs = ["67","67","67","Your age is: 31","Hello Katlynn","/\\w+ Katlynn/"]
 outputs = []
 
 
@@ -18,36 +18,34 @@ def custom_print(*args, **kwargs):
     outputs.append(args)
 
 async def internal_func_name_user_code():
-    popisPizza = ['1. Margherita(rajčica,sir)','2. Funghi(rajčica,sir,funghi)']
-    custom_print('Bok!')
-    imeOsobe = await custom_input('Ja sam PizzaBot. Kako se zoveš?' )
-    custom_print('Drago mi je ' + imeOsobe + '. Što želiš napraviti dalje:')
-    while True:
-        custom_print('a. Pokaži pizzu')
-        custom_print('b. Naruči pizzu')
-        izbor = await custom_input('Odaberi jednu od ponuđenih opcija: ')
-        if izbor == 'a':
-            custom_print('Odabrao si opciju: ' + izbor)
-            custom_print('Podnuđene pizze su: ')
-            custom_print(popisPizza)
-        elif izbor == 'b':
-            custom_print('Odabrao si opciju: ' + izbor + ' \\n')
-            custom_print('Podnuđene pizze su: ')
-            custom_print(popisPizza)
-            izborPizze = await custom_input('Koju pizzu' + imeOsobe + 'želiš naručiti? ')
-            if izborPizze == '1':
-                custom_print('Tvoj izbor je Margherita')
-                custom_print('Tvoj izbor je '+ popisPizza[0])
-            elif izborPizze == '2':
-                custom_print('Tvoj izbor je Funghi')
-                custom_print('Tvoj izbor je '+ popisPizza[1])
-            else:
-                custom_print('Na žalost taj izbor nemamo u našem menu')
-        else:
-            custom_print('Došlo je do nesporazuma, nisi odabrao niti jednu ponuđenu opciju.')
-            custom_print('Molim te odaberi ponovno\\n')
-        break
-            
+    async def pero():
+        age = int(await custom_input("Enter your age: "))
+        custom_print("Your age is:", age)  # + 1)
+    a = int(await custom_input('a'))
+    b = int(await custom_input('b'))
+    c = a + b
+    c2 = a * b
+    for_0 = 0
+    for i in range(3): # for_0
+        if for_0 > 1000:
+            raise RuntimeError(f"Max number of iterations exceeded (1000) for for_0")
+        for_0 = for_0 + 1
+        custom_print(a + b)
+    if 1 == 2:
+        for k in range(10):
+            custom_print('foo')
+    await pero()
+    name = await custom_input('name')  # + '1'
+    custom_print(f"Hello {name}")
+    custom_print(f"Bok {name}")
+    a = await custom_input('command')
+    while_0 = 0
+    while a != 'exit': # while_0
+        if while_0 > 1000:
+            raise RuntimeError(f"Max number of iterations exceeded (1000) for while_0")
+        while_0 = while_0 + 1
+        custom_print('Wrong command')
+        a = await custom_input('command')
     return locals()
 
 class Result:
@@ -87,10 +85,10 @@ async def main():
                 if match is None:
                     results.append(Result(False, 'match', f'index[{i}]: REGEX "{a}" does not match "{b}"'))
                 else:
-                    results.append(Result(True, 'match', 'index[{i}]: "{a}" is correct'))
+                    results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct'))
             elif a != b:
                 results.append(Result(False, 'match', f'index[{i}]: "{a}" does not match "{b}"'))
             else:
-                results.append(Result(True, 'match', 'index[{i}]: "{a}" is correct'))
+                results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct'))
 
     return json.dumps(list(map(lambda x: x.to_dict(), results)))

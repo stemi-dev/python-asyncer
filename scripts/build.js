@@ -21,7 +21,7 @@ const shared = {
       minify: true,
       sourcemap: true,
       platform: "browser",
-      target: "es2016",
+      target: "es2020",
       outfile: join(__dirname, "../dist/browser/index.js"),
     }),
 

@@ -23,10 +23,9 @@ const asyncPython = (pyodide: Pyodide) => {
   const testData = generateTest(require("./foo.json"), faker);
   const code = await readFile(join(__dirname, "foo.py"), "utf8");
 
-  const out = asyncify(code, "tests", testData);
+  const out = asyncify(code, { env: "native" }, testData);
   await writeFile("./tmp.py", out);
 
-  process.exit(0);
   const py = asyncPython(await loadPyodide());
 
   console.log("here");

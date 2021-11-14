@@ -20,10 +20,13 @@ export const cleanup = (code: string) => {
   const lines = out
     .join("\n")
     .split("\n")
-    .filter((a) => !a.startsWith("#"))
-    .filter((a) => a.length > 0);
+    .filter((a) => !a.startsWith("#"));
 
-  return lines;
+  if (process.env["asyncer_dev"] === "true") {
+    return lines;
+  }
+
+  return lines.filter((a) => a.length > 0);
 };
 
 export const formatTestData = (data: GeneratedTest) => {

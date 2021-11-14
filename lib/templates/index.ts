@@ -1,4 +1,4 @@
-export { globals } from "./globals";
+export { polyfills } from "./polyfills";
 export { run } from "./run";
 
 export const shared = `import json

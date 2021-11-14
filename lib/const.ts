@@ -1,4 +1,4 @@
-export const INDENTS = 4;
+export const DEFAULT_INDENTS = 4;
 
 export const STDIO_NAMES = {
   print: "custom_print",

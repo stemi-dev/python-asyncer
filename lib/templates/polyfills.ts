@@ -1,7 +1,7 @@
 import { AsyncifyENV } from "../asyncify";
 import { STDIO_NAMES } from "../const";
 
-export const globals: Record<AsyncifyENV, string> = {
+export const polyfills: Record<AsyncifyENV, string> = {
   native: `async def ${STDIO_NAMES.input}(prompt: str):
   return input(prompt)
 

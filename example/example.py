@@ -26,3 +26,8 @@ pero()
 name = input('name')  # + '1'
 print(f"Hello {name}")
 print(f"Bok {name}")
+
+a = input('command')
+while a != 'exit':
+    print('Wrong command')
+    a = input('command')

@@ -1,31 +1,41 @@
-import { INDENTS, INTERNAL_FUNC_NAME_USER_CODE, STDIO_NAMES } from "./const";
+import { INTERNAL_FUNC_NAME_USER_CODE, STDIO_NAMES } from "./const";
 import { space, cleanup, formatTestData } from "./utils";
 import { GeneratedTest } from "./generateTest";
-
-import { globals, shared, run } from "./templates";
+import { polyfills, shared, run } from "./templates";
+import { Config, defaultConfig } from "./config";
 
 export type AsyncifyENV = "native" | "browser" | "tests";
 
+type Line = {
+  line: string;
+  sob: boolean;
+  loop: "for" | "while" | false;
+  indent: number;
+};
+
 /**
  * @param {string} raw
- * @param {AsyncifyENV} env
+ * @param {Config} config
  * @param {GeneratedTest | undefined} testData
  *
  * @throws {Error} if user code contains INTERNAL_FUNC_NAME_USER_CODE
  */
-export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest) => {
+export const asyncify = (raw: string, config?: Partial<Config>, testData?: GeneratedTest) => {
   if (raw.includes(INTERNAL_FUNC_NAME_USER_CODE)) {
     throw new Error(`User code can't contain ${INTERNAL_FUNC_NAME_USER_CODE}`);
   }
 
+  const { env, indents, maxIterations } = { ...defaultConfig, ...config };
+
   const lines = cleanup(raw);
 
   // detect indents
-  const parsed = lines.map((line) => {
+  const parsed: Line[] = lines.map((line) => {
     const indent = line.match(/^\s*/)?.[0];
     return {
       line: line.slice(indent?.length || 0),
-      startOfBlock: line.endsWith(":"),
+      sob: line.endsWith(":"),
+      loop: line.startsWith("for") ? "for" : line.startsWith("while") ? "while" : false,
       indent: indent?.length || 0,
     };
   });
@@ -34,7 +44,7 @@ export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest
 
   const functionsToAwait = ["input"];
   parsed.forEach((line) => {
-    if (line.startOfBlock) {
+    if (line.sob) {
       if (line.line.startsWith("def")) {
         functionsToAwait.push(line.line.split(" ")[1].slice(0, -2));
       } else if (line.line.startsWith("async def")) {
@@ -43,9 +53,9 @@ export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest
     }
   });
 
-  const withAsyncAwait = parsed.map((line, index) => {
+  const withAsyncAwait = parsed.map((line) => {
     // if is def of a function add async before
-    if (line.line.startsWith("def") && line.startOfBlock) {
+    if (line.line.startsWith("def") && line.sob) {
       return {
         ...line,
         line: `async ${line.line}`,
@@ -53,7 +63,7 @@ export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest
     }
 
     functionsToAwait.forEach((func) => {
-      if (line.line.includes(func) && !line.startOfBlock) {
+      if (line.line.includes(func) && !line.sob) {
         line.line = line.line.replace(func, `await ${func}`);
       }
     });
@@ -61,11 +71,33 @@ export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest
     return line;
   });
 
+  const maxIterError = (name: string) => {
+    return `raise RuntimeError(f"Max number of iterations exceeded (${maxIterations}) for ${name}")`;
+  };
+
+  let loopIndex = 0;
+  const withLoopLimiters = withAsyncAwait.reduce<Line[]>((all, l) => {
+    if (l.loop) {
+      const varName = `${l.loop}_${loopIndex}`;
+      const out: Line[] = [
+        { ...l, line: `${varName} = 0`, sob: false },
+        { ...l, line: `${l.line} # ${varName}` },
+        { ...l, line: `if ${varName} > ${maxIterations}:`, indent: l.indent + indents, sob: true },
+        { ...l, line: maxIterError(varName), indent: l.indent + indents * 2, sob: false },
+        { ...l, line: `${varName} = ${varName} + 1`, indent: l.indent + indents, sob: false },
+      ];
+
+      return [...all, ...out];
+    }
+
+    return [...all, l];
+  }, []);
+
   const replaces = [
     ["print(", `${STDIO_NAMES.print}(`],
     ["input(", `${STDIO_NAMES.input}(`],
   ];
-  const withCustomSTDIO = withAsyncAwait.map((line) => {
+  const withCustomSTDIO = withLoopLimiters.map((line) => {
     replaces.forEach(([from, to]) => {
       if (line.line.includes(from)) {
         line.line = line.line.replace(from, to);
@@ -76,16 +108,16 @@ export const asyncify = (raw: string, env: AsyncifyENV, testData?: GeneratedTest
   });
 
   const functionCode = withCustomSTDIO
-    .map((p) => `${space(p.indent + INDENTS)}${p.line}`)
+    .map((p) => `${space(p.indent + indents)}${p.line}`)
     .join("\n");
 
   const output = `
 ${shared}
-${globals[env]}
+${polyfills[env]}
 
 async def ${INTERNAL_FUNC_NAME_USER_CODE}():
 ${functionCode}
-${space(INDENTS)}return locals()
+${space(indents)}return locals()
 
 ${run[env]}`.trim();
 

@@ -20,7 +20,7 @@ const { asyncify } = require("../lib");
       "utf8"
     );
 
-    const output = await asyncify(content, "native");
+    const output = await asyncify(content, { env: "native" });
 
     await writeFile(join(__dirname, "./output", file), output);
   }

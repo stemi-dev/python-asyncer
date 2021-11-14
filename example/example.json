@@ -5,14 +5,17 @@
     "name": "faker.name.firstName()",
     "age": "faker.datatype.number({min: 15, max: 50})"
   },
-  "input": ["$x", "$y", "$age", "$name"],
-  "output": [
-    "calc($x + $y)",
-    "calc($x + $y)",
-    "calc($x + $y)",
-    "Your age is: $age",
-    "Hello $name",
-    "/\\w+ $name/"
+  "test": [
+    { "in": "$x" },
+    { "in": "$y" },
+    { "out": "calc($x + $y)" },
+    { "out": "calc($x + $y)" },
+    { "out": "calc($x + $y)" },
+    { "in": "$age" },
+    { "out": "Your age is: $age" },
+    { "in": "$name" },
+    { "out": "Hello $name" },
+    { "out": "/\\w+ $name/" }
   ],
   "defined": {
     "name": "$name",
