@@ -25,7 +25,10 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
     throw new Error(`User code can't contain ${INTERNAL_FUNC_NAME_USER_CODE}`);
   }
 
-  const { env, indents, maxIterations } = { ...defaultConfig, ...config };
+  const finalConfig = { ...defaultConfig, ...config };
+  const { env, indents, maxIterations } = finalConfig;
+
+  console.log(finalConfig);
 
   const lines = cleanup(raw);
 
@@ -82,7 +85,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
       const out: Line[] = [
         { ...l, line: `${varName} = 0`, sob: false },
         { ...l, line: `${l.line} # ${varName}` },
-        { ...l, line: `if ${varName} > ${maxIterations}:`, indent: l.indent + indents, sob: true },
+        { ...l, line: `if ${varName} >= ${maxIterations}:`, indent: l.indent + indents, sob: true },
         { ...l, line: maxIterError(varName), indent: l.indent + indents * 2, sob: false },
         { ...l, line: `${varName} = ${varName} + 1`, indent: l.indent + indents, sob: false },
       ];
