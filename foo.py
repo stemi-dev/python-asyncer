@@ -3,10 +3,10 @@ import json
 import re
 
 index = -1
-inputs = ["13", "35", "43", "Kailey"]
-expected_definitions = {"name": "Kailey", "c": 48, "c2": 455}
-expected_outputs = ["48", "48", "48",
-                    "Your age is: 43", "Hello Kailey", "/\\w+ Kailey/"]
+inputs = ["Royal", "c", "KILL_PROGRAM"]
+expected_definitions = {"imeOsobe": "Royal"}
+expected_outputs = ["Bok!", "Drago mi je Royal. Što želiš napraviti dalje:",
+                    "/a\\..*/", "/b\\..*/", "/.*/", "/.*/", "/a\\..*/", "/b\\..*/"]
 outputs = []
 
 
@@ -14,7 +14,7 @@ class KillProgram(RuntimeError):
     pass
 
 
-async def custom_input(prompt: str):
+async def test_input(prompt: str):
     global index
     index += 1
 
@@ -24,44 +24,53 @@ async def custom_input(prompt: str):
     return inputs[index]
 
 
-def custom_print(*args, **kwargs):
+def test_print(*args, **kwargs):
     outputs.append(args)
 
 
 async def internal_func_name_user_code():
     try:
-        async def pero():
-            age = int(await custom_input("Enter your age: "))
-            custom_print("Your age is:", age)  # + 1)
-        a = int(await custom_input('a'))
-        b = int(await custom_input('b'))
-        c = a + b
-        c2 = a * b
-        for_0 = 0
-        for i in range(3):  # for_0
-            if for_0 >= 1000:
-                raise RuntimeError(
-                    f"Max number of iterations exceeded (1000) for for_0")
-            for_0 = for_0 + 1
-            custom_print(a + b)
-        if 1 == 2:
-            for k in range(10):
-                custom_print('foo')
-        await pero()
-        name = await custom_input('name')  # + '1'
-        custom_print(f"Hello {name}")
-        custom_print(f"Bok {name}")
-        a = await custom_input('command')
+        popisPizza = ['1. Margherita(rajčica,sir)',
+                      '2. Funghi(rajčica,sir,funghi)']
+        test_print('Bok!')
+        imeOsobe = await test_input('Ja sam PizzaBot. Kako se zoveš?')
+        test_print('Drago mi je ' + imeOsobe + '. Što želiš napraviti dalje:')
         while_0 = 0
-        while a != 'exit':  # while_0
-            if while_0 >= 1000:
+        while True:  # while_0
+            if while_0 >= 3:
                 raise RuntimeError(
-                    f"Max number of iterations exceeded (1000) for while_0")
+                    f"Max number of iterations exceeded (3) for while_0")
             while_0 = while_0 + 1
-            custom_print('Wrong command')
-            a = await custom_input('command')
+            test_print('a. Pokaži pizzu')
+            test_print('b. Naruči pizzu')
+            izbor = await test_input('Odaberi jednu od ponuđenih opcija: ')
+            if izbor == 'a':
+                test_print('Odabrao si opciju: ' + izbor)
+                test_print('Podnuđene pizze su: ')
+                # test_print(popisPizza)
+                for i in popisPizza:
+                    test_print(i)
+            elif izbor == 'b':
+                test_print('Odabrao si opciju: ' + izbor + ' \\n')
+                test_print('Podnuđene pizze su: ')
+                test_print(popisPizza)
+                izborPizze = await test_input('Koju pizzu' + imeOsobe + 'želiš naručiti? ')
+                if izborPizze == '1':
+                    test_print('Tvoj izbor je Margherita')
+                    test_print('Tvoj izbor je ' + popisPizza[0])
+                elif izborPizze == '2':
+                    test_print('Tvoj izbor je Funghi')
+                    test_print('Tvoj izbor je ' + popisPizza[1])
+                else:
+                    test_print('Na žalost taj izbor nemamo u našem menu')
+            else:
+                test_print(
+                    'Došlo je do nesporazuma, nisi odabrao niti jednu ponuđenu opciju.')
+                test_print('Molim te odaberi ponovno\\n')
     except KillProgram:
         pass
+    except Exception as e:
+        raise e
     finally:
         return locals()
 
@@ -79,14 +88,17 @@ class Result:
 async def main():
     try:
         defines = await internal_func_name_user_code()
+    except KillProgram:
+        defines = {}
+        pass
     except Exception as e:
-        return {"error": str(e)}
+        raise e
 
     results = []
     for key in expected_definitions:
         if key not in defines:
             results.append(
-                Result(False, 'defined', "variable {key} not found"))
+                Result(False, 'defined', f"variable {key} not found"))
         elif defines[key] != expected_definitions[key]:
             comment = f"variable {key} not expected value, found: {defines[key]}, expected: {expected_definitions[key]}"
             results.append(Result(False, 'defined', comment))
@@ -125,5 +137,5 @@ if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     res = loop.run_until_complete(main())
     print(json.dumps([t for t in json.loads(res)
-          if t['test_pass'] == True], indent=4, sort_keys=True))
+          if t['test_pass'] == False], indent=4, sort_keys=True))
     loop.close()

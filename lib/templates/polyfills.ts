@@ -14,9 +14,17 @@ $__DATA__$
 outputs = []
 
 
+class KillProgram(RuntimeError):
+    pass
+
+
 async def ${input}(prompt: str):
     global index
     index += 1
+
+    if inputs[index] == 'KILL_PROGRAM':
+        raise KillProgram()
+
     return inputs[index]
 
 

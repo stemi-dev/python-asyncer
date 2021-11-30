@@ -120,17 +120,27 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
     return line;
   });
 
-  const functionCode = withCustomSTDIO
-    .map((p) => `${space(p.indent + indents)}${p.line}`)
-    .join("\n");
+  const functionCode = (i = 0) =>
+    withCustomSTDIO.map((p) => `${space(p.indent + indents + i)}${p.line}`).join("\n");
+
+  let body = `${functionCode(0)}
+${space(indents)}return locals()`;
+
+  if (env === "tests") {
+    body = `${space(indents)}try:
+${functionCode(indents)}
+${space(indents)}except KillProgram:
+${space(indents * 2)}pass
+${space(indents)}finally:
+${space(indents * 2)}return locals()`;
+  }
 
   const output = `
 ${shared}
 ${polyfills[env]({ input: stdioInput, print: stdioOutput })}
 
 async def ${INTERNAL_FUNC_NAME_USER_CODE}():
-${functionCode}
-${space(indents)}return locals()
+${body}
 
 ${run[env]}`.trim();
 

@@ -19,7 +19,10 @@ export const run: Record<AsyncifyENV, string> = {
   
   
 async def ${MAIN_FUNTION}():
-    defines = await ${INTERNAL_FUNC_NAME_USER_CODE}()
+    try:
+        defines = await ${INTERNAL_FUNC_NAME_USER_CODE}()
+    except Exception as e:
+        return {"error": str(e)}
 
     results = []
     for key in expected_definitions:
