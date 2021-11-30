@@ -1,7 +1,7 @@
 import { INTERNAL_FUNC_NAME_USER_CODE } from "./const";
-import { space, cleanup, formatTestData } from "./utils";
+import { cleanup, formatTestData, space } from "./utils";
 import { GeneratedTest } from "./generateTest";
-import { polyfills, shared, run } from "./templates";
+import { polyfills, run, shared } from "./templates";
 import { Config, defaultConfig } from "./config";
 
 export type AsyncifyENV = "native" | "browser" | "tests";
@@ -45,7 +45,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
 
   // TODO: check if it's valid python
 
-  const functionsToAwait = ["input"];
+  const functionsToAwait = ["input", "sleep"];
   parsed.forEach((line) => {
     if (line.sob) {
       if (line.line.startsWith("def")) {
