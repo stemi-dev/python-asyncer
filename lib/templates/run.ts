@@ -9,13 +9,14 @@ export const run: Record<AsyncifyENV, string> = {
   browser: `async def ${MAIN_FUNTION}():
   await ${INTERNAL_FUNC_NAME_USER_CODE}()`,
   tests: `class Result:
-    def __init__(self, test_pass, test_type, comment=None):
+    def __init__(self, test_pass, test_type, comment=None, verbose=None):
         self.test_pass = test_pass
         self.type = test_type
         self.comment = comment
+        self.verbose = verbose
 
     def to_dict(self):
-        return {"test_pass": self.test_pass, "type": self.type, "comment": self.comment}
+        return {"test_pass": self.test_pass, "type": self.type, "comment": self.comment, "verbose": self.verbose}
   
   
 async def ${MAIN_FUNTION}():
@@ -35,7 +36,7 @@ async def ${MAIN_FUNTION}():
             results.append(Result(True, 'defined', key))
 
     if len(outputs) != len(expected_outputs):
-        results.append(Result(False, 'number_of_prints', f'found: {len(outputs)}, expected: {len(expected_outputs)}'))
+        results.append(Result(False, 'number_of_prints', f'found: {len(outputs)}, expected: {len(expected_outputs)}', verbose=[outputs, expected_outputs]))
     else:
         results.append(Result(True, 'number_of_prints', 'Correct number of prints'))
 

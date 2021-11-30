@@ -6,7 +6,7 @@
   "publishConfig": {
     "@stemi-dev:registry": "https://npm.pkg.github.com"
   },
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Package used for generating tests for the python runner + converting python code to async to be run in the browser",
   "keywords": [],
   "author": "Fran Zekan",
@@ -25,9 +25,6 @@
   "dependencies": {
     "faker": "^5.5.3",
     "lodash": "^4.17.21"
-  },
-  "peerDependencies": {
-    "@types/faker": "5.5.9"
   },
   "devDependencies": {
     "@types/faker": "^5.5.9",
