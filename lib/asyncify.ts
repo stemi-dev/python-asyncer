@@ -6,6 +6,8 @@ import { Config, defaultConfig } from "./config";
 
 export type AsyncifyENV = "native" | "browser" | "tests";
 
+const isDev = process.env["asyncer_dev"] === "true";
+
 type Line = {
   line: string;
   sob: boolean;
@@ -28,7 +30,9 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
   const finalConfig = { ...defaultConfig, ...config };
   const { env, indents, maxIterations, stdioInput, stdioOutput } = finalConfig;
 
-  console.log(finalConfig);
+  if (isDev) {
+    console.log(finalConfig);
+  }
 
   const lines = cleanup(raw);
 
@@ -49,12 +53,18 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
   parsed.forEach((line) => {
     if (line.sob) {
       if (line.line.startsWith("def")) {
-        functionsToAwait.push(line.line.split(" ")[1].slice(0, -2));
+        const tmp = line.line.match(/^\s*def\s+(\w+)/)?.[1];
+        tmp && functionsToAwait.push(tmp);
       } else if (line.line.startsWith("async def")) {
-        functionsToAwait.push(line.line.split(" ")[2].slice(0, -2));
+        const tmp = line.line.match(/^\s*async def\s+(\w+)/)?.[1];
+        tmp && functionsToAwait.push(tmp);
       }
     }
   });
+
+  if (isDev) {
+    console.log(functionsToAwait);
+  }
 
   const withAsyncAwait = parsed.map((line) => {
     // if is def of a function add async before
