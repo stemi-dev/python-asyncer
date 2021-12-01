@@ -49,6 +49,8 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
 
   // TODO: check if it's valid python
 
+  const isDunder = (line?: string) => line && line.startsWith("__") && line.endsWith("__");
+
   const functionsToAwait = ["input", "sleep"];
   parsed.forEach((line) => {
     if (line.sob) {
@@ -59,7 +61,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
         methodName = line.line.match(/^\s*async def\s+(\w+)/)?.[1];
       }
 
-      if (methodName && !(methodName.startsWith("__") && methodName.endsWith("__"))) {
+      if (methodName && !isDunder(methodName)) {
         functionsToAwait.push(methodName);
       }
     }
@@ -71,7 +73,11 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
 
   const withAsyncAwait = parsed.map((line) => {
     // if is def of a function add async before
-    if (line.line.startsWith("def") && line.sob) {
+    if (
+      line.line.startsWith("def") &&
+      line.sob &&
+      !isDunder(line.line.match(/^\s*def\s+(\w+)/)?.[1])
+    ) {
       return {
         ...line,
         line: `async ${line.line}`,
