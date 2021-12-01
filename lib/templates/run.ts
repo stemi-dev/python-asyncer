@@ -29,7 +29,7 @@ async def ${MAIN_FUNCTION}():
     results = []
     for key in expected_definitions:
         if key not in defines:
-            results.append(Result(False, 'defined', "variable {key} not found"))
+            results.append(Result(False, 'defined', f"variable {key} not found"))
         elif defines[key] != expected_definitions[key]:
             comment = f"variable {key} not expected value, found: {defines[key]}, expected: {expected_definitions[key]}"
             results.append(Result(False, 'defined', comment))
