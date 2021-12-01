@@ -3,7 +3,7 @@ import { readFile, writeFile } from "fs/promises";
 import faker from "faker";
 
 import { asyncify, generateTest } from "../lib";
-import { MAIN_FUNTION } from "../lib/const";
+import { MAIN_FUNCTION } from "../lib/const";
 import { Pyodide } from "./type";
 
 const loadPyodide = async () => {
@@ -33,6 +33,6 @@ const asyncPython = (pyodide: Pyodide) => {
   // prepare
   await py(out);
 
-  const output = JSON.parse(await py<string>(`${MAIN_FUNTION}()`));
+  const output = JSON.parse(await py<string>(`${MAIN_FUNCTION}()`));
   console.log(output);
 })();

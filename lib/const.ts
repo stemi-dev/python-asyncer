@@ -6,4 +6,4 @@ export const STDIO_NAMES = {
 };
 
 export const INTERNAL_FUNC_NAME_USER_CODE = "internal_func_name_user_code";
-export const MAIN_FUNTION = "main";
+export const MAIN_FUNCTION = "main";
