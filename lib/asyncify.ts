@@ -52,12 +52,15 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
   const functionsToAwait = ["input", "sleep"];
   parsed.forEach((line) => {
     if (line.sob) {
+      let methodName: string | undefined;
       if (line.line.startsWith("def")) {
-        const tmp = line.line.match(/^\s*def\s+(\w+)/)?.[1];
-        tmp && functionsToAwait.push(tmp);
+        methodName = line.line.match(/^\s*def\s+(\w+)/)?.[1];
       } else if (line.line.startsWith("async def")) {
-        const tmp = line.line.match(/^\s*async def\s+(\w+)/)?.[1];
-        tmp && functionsToAwait.push(tmp);
+        methodName = line.line.match(/^\s*async def\s+(\w+)/)?.[1];
+      }
+
+      if (methodName && !(methodName.startsWith("__") && methodName.endsWith("__"))) {
+        functionsToAwait.push(methodName);
       }
     }
   });
