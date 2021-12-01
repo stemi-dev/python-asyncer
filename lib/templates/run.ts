@@ -9,14 +9,15 @@ export const run: Record<AsyncifyENV, string> = {
   browser: `async def ${MAIN_FUNCTION}():
   await ${INTERNAL_FUNC_NAME_USER_CODE}()`,
   tests: `class Result:
-    def __init__(self, test_pass, test_type, comment=None, verbose=None):
+    def __init__(self, test_pass, test_type, comment=None, verbose=None, index=None):
         self.test_pass = test_pass
         self.type = test_type
         self.comment = comment
         self.verbose = verbose
+        self.index = index
 
     def to_dict(self):
-        return {"test_pass": self.test_pass, "type": self.type, "comment": self.comment, "verbose": self.verbose}
+        return {"test_pass": self.test_pass, "type": self.type, "comment": self.comment, "verbose": self.verbose, "index": self.index}
   
   
 async def ${MAIN_FUNCTION}():
@@ -47,13 +48,13 @@ async def ${MAIN_FUNCTION}():
             if b.startswith('/') and b.endswith('/'):
                 match = re.match(b[1:-1], a)
                 if match is None:
-                    results.append(Result(False, 'match', f'index[{i}]: REGEX "{a}" does not match "{b}"'))
+                    results.append(Result(False, 'match', f'index[{i}]: REGEX "{a}" does not match "{b}"', index=i))
                 else:
-                    results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct'))
+                    results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct', index=i))
             elif a != b:
-                results.append(Result(False, 'match', f'index[{i}]: "{a}" does not match "{b}"'))
+                results.append(Result(False, 'match', f'index[{i}]: "{a}" does not match "{b}"', index=i))
             else:
-                results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct'))
+                results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct', index=i))
 
     return json.dumps(list(map(lambda x: x.to_dict(), results)))`,
 };
