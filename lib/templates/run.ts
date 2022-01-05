@@ -18,8 +18,8 @@ export const run: Record<AsyncifyENV, string> = {
 
     def to_dict(self):
         return {"test_pass": self.test_pass, "type": self.type, "comment": self.comment, "verbose": self.verbose, "index": self.index}
-  
-  
+
+
 async def ${MAIN_FUNCTION}():
     try:
         defines = await ${INTERNAL_FUNC_NAME_USER_CODE}()
@@ -29,30 +29,36 @@ async def ${MAIN_FUNCTION}():
     results = []
     for key in expected_definitions:
         if key not in defines:
-            results.append(Result(False, 'defined', f"variable {key} not found"))
+            results.append(Result(False, 'defined', f"variable '{key}' not found"))
         elif defines[key] != expected_definitions[key]:
-            comment = f"variable {key} not expected value, found: {defines[key]}, expected: {expected_definitions[key]}"
+            comment = f"variable '{key}' not expected value, found: {defines[key]}, expected: {expected_definitions[key]}"
             results.append(Result(False, 'defined', comment))
         else:
             results.append(Result(True, 'defined', key))
 
     if len(outputs) != len(expected_outputs):
-        results.append(Result(False, 'number_of_prints', f'found: {len(outputs)}, expected: {len(expected_outputs)}', verbose=[outputs, expected_outputs]))
+        results.append(Result(False, 'number_of_prints', f'You had {len(outputs)} prints, but this test expected you to have {len(expected_outputs)} prints', verbose=[outputs, expected_outputs]))
     else:
         results.append(Result(True, 'number_of_prints', 'Correct number of prints'))
 
         for i in range(len(outputs)):
             a = " ".join(map(lambda x: str(x), list(outputs[i])))
             b = expected_outputs[i]
+            c = expected_comments[i]
 
             if b.startswith('/') and b.endswith('/'):
                 match = re.match(b[1:-1], a)
                 if match is None:
-                    results.append(Result(False, 'match', f'index[{i}]: REGEX "{a}" does not match "{b}"', index=i))
+                    comment = c or f'REGEX "{a}" does not match "{b}"'
+                    if comment == c:
+                        comment = f'{comment}, [Your output was: "{a}"]'
+
+                    results.append(Result(False, 'match', f'index[{i}]: {comment}', index=i))
                 else:
                     results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct', index=i))
             elif a != b:
-                results.append(Result(False, 'match', f'index[{i}]: "{a}" does not match "{b}"', index=i))
+                comment = c or 'We expected to see "{b}" and you printed "{a}"'
+                results.append(Result(False, 'match', f'index[{i}]: {comment}', index=i))
             else:
                 results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct', index=i))
 
