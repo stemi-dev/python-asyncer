@@ -30,6 +30,8 @@ export const cleanup = (code: string) => {
 };
 
 export const formatTestData = (data: GeneratedTest) => {
+  console.log(data);
+
   return `inputs = ${JSON.stringify(data.input)}
 expected_definitions = ${JSON.stringify(data.defined)}
 expected_outputs = ${JSON.stringify(data.output)}
