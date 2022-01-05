@@ -55,12 +55,12 @@ async def ${MAIN_FUNCTION}():
 
                     results.append(Result(False, 'match', f'index[{i}]: {comment}', index=i))
                 else:
-                    results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct', index=i))
+                    results.append(Result(True, 'match', f'index[{i}]: Correct, [Your output was: "{a}"]', index=i))
             elif a != b:
                 comment = c or 'We expected to see "{b}" and you printed "{a}"'
                 results.append(Result(False, 'match', f'index[{i}]: {comment}', index=i))
             else:
-                results.append(Result(True, 'match', f'index[{i}]: "{a}" is correct', index=i))
+                results.append(Result(True, 'match', f'index[{i}]: Correct, [Your output was: "{a}"]', index=i))
 
     return json.dumps(list(map(lambda x: x.to_dict(), results)))`,
 };
