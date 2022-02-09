@@ -7,7 +7,15 @@ export const polyfills: Record<AsyncifyENV, ({ input, print }) => string> = {
 
 async def ${print}(*args, **kwargs):
   print(*args, **kwargs)`,
-  browser: () => ``,
+  browser: ({ print }) => `async def print_mock(*args, **kwargs):
+  outputs = []
+  for arg in args:
+    if type(arg) == float and arg.is_integer():
+      outputs.append(str(arg))
+    else:
+      outputs.append(arg)
+
+  ${print}(outputs, **kwargs)`,
   tests: ({ input, print }) => `
 index = -1
 $__DATA__$

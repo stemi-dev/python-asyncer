@@ -135,6 +135,11 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
   let body = `${functionCode(0)}
 ${space(indents)}return locals()`;
 
+  // FIXME: HACK TO ADD mocked_print
+  if (env === "browser") {
+    body = body.replace(new RegExp(stdioOutput, "g"), "print_mock");
+  }
+
   if (env === "tests") {
     body = `${space(indents)}try:
 ${functionCode(indents)}
