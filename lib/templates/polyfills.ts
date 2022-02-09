@@ -1,7 +1,7 @@
 import { AsyncifyENV } from "../asyncify";
 
 export const polyfills: Record<AsyncifyENV, ({ input, print }) => string> = {
-  native: ({ input, print }) => `async def ${input}(prompt: str):
+  native: ({ input, print }) => `async def ${input}(prompt: str = None):
   return input(prompt)
 
 
@@ -26,7 +26,7 @@ class KillProgram(RuntimeError):
     pass
 
 
-async def ${input}(prompt: str):
+async def ${input}(prompt: str = None):
     global index
     index += 1
 
