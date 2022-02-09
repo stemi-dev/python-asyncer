@@ -15,7 +15,7 @@ async def ${print}(*args, **kwargs):
     else:
       outputs.append(arg)
 
-  ${print}(outputs, **kwargs)`,
+  await ${print}(outputs, **kwargs)`,
   tests: ({ input, print }) => `
 index = -1
 $__DATA__$
