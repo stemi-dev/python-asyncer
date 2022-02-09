@@ -151,6 +151,7 @@ ${space(indents * 2)}return locals()`;
 
   const output = `
 ${shared}
+
 ${polyfills[env]({ input: stdioInput, print: stdioOutput })}
 
 async def ${INTERNAL_FUNC_NAME_USER_CODE}():
