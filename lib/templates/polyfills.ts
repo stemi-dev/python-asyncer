@@ -5,7 +5,7 @@ export const polyfills: Record<AsyncifyENV, ({ input, print }) => string> = {
   return input(prompt)
 
 
-async def ${print}(*args, **kwargs):
+def ${print}(*args, **kwargs):
   print(*args, **kwargs)`,
   browser: ({ print }) => `async def print_mock(*args, **kwargs):
   outputs = []
@@ -15,7 +15,7 @@ async def ${print}(*args, **kwargs):
     else:
       outputs.append(arg)
 
-  await ${print}(outputs, **kwargs)`,
+  ${print}(outputs, **kwargs)`,
   tests: ({ input, print }) => `
 index = -1
 $__DATA__$
