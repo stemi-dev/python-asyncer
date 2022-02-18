@@ -24,9 +24,9 @@ async def ${MAIN_FUNCTION}():
     try:
         defines, exception = await ${INTERNAL_FUNC_NAME_USER_CODE}()
         if exception:
-            return {"error": str(exception)}
+            return json.dumps({"error": str(exception)})
     except Exception as e:
-        return {"error": str(e)}
+        return json.dumps({"error": str(e)})
 
     results = []
     for key in expected_definitions:
