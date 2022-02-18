@@ -141,12 +141,15 @@ ${space(indents)}return locals()`;
   }
 
   if (env === "tests") {
-    body = `${space(indents)}try:
+    body = `${space(indents)}ex = None
+${space(indents)}try:
 ${functionCode(indents)}
 ${space(indents)}except KillProgram:
 ${space(indents * 2)}pass
+${space(indents)}except Exception as e:
+${space(indents * 2)}ex = e
 ${space(indents)}finally:
-${space(indents * 2)}return locals()`;
+${space(indents * 2)}return locals(), ex`;
   }
 
   const output = `

@@ -1,14 +1,12 @@
 import json
-from pprint import pprint
 import re
-import asyncio
+
 
 index = -1
-inputs = ["Marty", "a"]
-expected_definitions = {"imeOsobe": "Marty"}
-expected_outputs = ["Bok!", "/.*Marty.*/", "/a\\..*/",
-                    "/b\\..*/", "/.*: a .*/", "/.*/", "/\\[.*,.*\\]/"]
-expected_comments = ["None", "None", "None", "None", "None", "None", "None"]
+inputs = ["Gayle","a"]
+expected_definitions = {"imeOsobe":"Gayle"}
+expected_outputs = ["Bok!","/.*Gayle.*/","/a\\..*/","/b\\..*/","/.*: a/","/.*/","/\\[.*,.*\\]/"]
+expected_comments = ["None","None","None","None","None","None","None"]
 outputs = []
 
 
@@ -16,7 +14,7 @@ class KillProgram(RuntimeError):
     pass
 
 
-async def custom_input(prompt: str):
+async def custom_input(prompt: str = None):
     global index
     index += 1
 
@@ -29,20 +27,17 @@ async def custom_input(prompt: str):
 def custom_print(*args, **kwargs):
     outputs.append(args)
 
-
 async def internal_func_name_user_code():
+    ex = None
     try:
-        popisPizza = ['1. Margherita(rajčica,sir)',
-                      '2. Funghi(rajčica,sir,funghi)']
+        popisPizza = ['1. Margherita(rajčica,sir)','2. Funghi(rajčica,sir,funghi)']
         custom_print('Bok!')
-        imeOsobe = await custom_input('Ja sam PizzaBot. Kako se zoveš?')
-        custom_print('Drago mi je ' + imeOsobe +
-                     '. Što želiš napraviti dalje:')
+        imeOsobe = await custom_input('Ja sam PizzaBot. Kako se zoveš?' )
+        custom_print('Drago mi je ' + imeOsobe + '. Što želiš napraviti dalje:')
         while_0 = 0
-        while True:  # while_0
+        while True: # while_0
             if while_0 >= 1000:
-                raise RuntimeError(
-                    f"Max number of iterations exceeded (1000) for while_0")
+                raise RuntimeError(f"Max number of iterations exceeded (1000) for while_0")
             while_0 = while_0 + 1
             custom_print('a. Pokaži pizzu')
             custom_print('b. Naruči pizzu')
@@ -58,23 +53,23 @@ async def internal_func_name_user_code():
                 izborPizze = await custom_input('Koju pizzu' + imeOsobe + 'želiš naručiti? ')
                 if izborPizze == '1':
                     custom_print('Tvoj izbor je Margherita')
-                    custom_print('Tvoj izbor je ' + popisPizza[0])
+                    custom_print('Tvoj izbor je '+ popisPizza[0])
                 elif izborPizze == '2':
                     custom_print('Tvoj izbor je Funghi')
-                    custom_print('Tvoj izbor je ' + popisPizza[1])
+                    custom_print('Tvoj izbor je '+ popisPizza[1])
                 else:
                     custom_print('Na žalost taj izbor nemamo u našem menu')
             else:
-                custom_print(
-                    'Došlo je do nesporazuma, nisi odabrao niti jednu ponuđenu opciju.')
+                custom_print('Došlo je do nesporazuma, nisi odabrao niti jednu ponuđenu opciju.')
                 custom_print('Molim te odaberi ponovno\\n')
             break
-
+                
     except KillProgram:
         pass
+    except Exception as e:
+        ex = e
     finally:
-        return locals()
-
+        return locals(), ex
 
 class Result:
     def __init__(self, test_pass, test_type, comment=None, verbose=None, index=None):
@@ -90,15 +85,16 @@ class Result:
 
 async def main():
     try:
-        defines = await internal_func_name_user_code()
+        defines, exception = await internal_func_name_user_code()
+        if exception:
+            return {"error": str(exception)}
     except Exception as e:
         return {"error": str(e)}
 
     results = []
     for key in expected_definitions:
         if key not in defines:
-            results.append(
-                Result(False, 'defined', f"variable '{key}' not found"))
+            results.append(Result(False, 'defined', f"variable '{key}' not found"))
         elif defines[key] != expected_definitions[key]:
             comment = f"variable '{key}' not expected value, found: {defines[key]}, expected: {expected_definitions[key]}"
             results.append(Result(False, 'defined', comment))
@@ -106,11 +102,9 @@ async def main():
             results.append(Result(True, 'defined', key))
 
     if len(outputs) != len(expected_outputs):
-        results.append(Result(False, 'number_of_prints',
-                       f'You had {len(outputs)} print{"" if len(outputs) == 1 else "s"}, but this test expected you to have {len(expected_outputs)} print{"" if len(expected_outputs) == 1 else "s"}', verbose=[outputs, expected_outputs]))
+        results.append(Result(False, 'number_of_prints', f'You had {len(outputs)} print{"" if len(outputs) == 1 else "s"}, but this test expected you to have {len(expected_outputs)} print{"" if len(expected_outputs) == 1 else "s"}', verbose=[outputs, expected_outputs]))
     else:
-        results.append(Result(True, 'number_of_prints',
-                       'Correct number of prints'))
+        results.append(Result(True, 'number_of_prints', 'Correct number of prints'))
 
         for i in range(len(outputs)):
             a = " ".join(map(lambda x: str(x), list(outputs[i])))
@@ -124,28 +118,13 @@ async def main():
                     if comment == c:
                         comment = f'{comment}, [Your output was: "{a}"]'
 
-                    results.append(
-                        Result(False, 'match', f'index[{i}]: {comment}', index=i))
+                    results.append(Result(False, 'match', f'index[{i}]: {comment}', index=i))
                 else:
-                    results.append(Result(
-                        True, 'match', f'index[{i}]: Correct, [Your output was: "{a}"]', index=i))
+                    results.append(Result(True, 'match', f'index[{i}]: Correct, [Your output was: "{a}"]', index=i))
             elif a != b:
                 comment = c or 'We expected to see "{b}" and you printed "{a}"'
-                results.append(
-                    Result(False, 'match', f'index[{i}]: {comment}', index=i))
+                results.append(Result(False, 'match', f'index[{i}]: {comment}', index=i))
             else:
-                results.append(Result(
-                    True, 'match', f'index[{i}]: Correct, [Your output was: "{a}"]', index=i))
+                results.append(Result(True, 'match', f'index[{i}]: Correct, [Your output was: "{a}"]', index=i))
 
     return json.dumps(list(map(lambda x: x.to_dict(), results)))
-
-
-async def pero():
-    res = await main()
-    pprint(json.loads(res))
-
-if __name__ == '__main__':
-
-    loop = asyncio.get_event_loop()
-    defines = loop.run_until_complete(pero())
-    loop.close()

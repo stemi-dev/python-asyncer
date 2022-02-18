@@ -22,7 +22,9 @@ export const run: Record<AsyncifyENV, string> = {
 
 async def ${MAIN_FUNCTION}():
     try:
-        defines = await ${INTERNAL_FUNC_NAME_USER_CODE}()
+        defines, exception = await ${INTERNAL_FUNC_NAME_USER_CODE}()
+        if exception:
+            return {"error": str(exception)}
     except Exception as e:
         return {"error": str(e)}
 
