@@ -15,6 +15,10 @@ export const getLineMapping = (asyncifiedCode: string) => {
 export const mapTraceback = (traceback: string, asyncifiedCode: string) => {
   const lineMapping = getLineMapping(asyncifiedCode);
   const mappedLines = traceback.split("\n").map((line) => {
+    if (!line.match(/File "<exec>"/)) {
+      return line;
+    }
+
     const m = line.match(/line \d+,/g);
     if (m) {
       const lineNum = parseInt(m[0].match(/\d+/) as any);
