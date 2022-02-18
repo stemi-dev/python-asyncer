@@ -147,7 +147,7 @@ ${functionCode(indents)}
 ${space(indents)}except KillProgram:
 ${space(indents * 2)}pass
 ${space(indents)}except Exception as e:
-${space(indents * 2)}ex = e
+${space(indents * 2)}ex = traceback.format_exc()
 ${space(indents)}finally:
 ${space(indents * 2)}return locals(), ex`;
   }
