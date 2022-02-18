@@ -14,14 +14,17 @@ export const getLineMapping = (asyncifiedCode: string) => {
 
 export const mapTraceback = (traceback: string, asyncifiedCode: string) => {
   const lineMapping = getLineMapping(asyncifiedCode);
-  const lines = traceback.split("\n");
-  const mappedLines = lines.map((line, index) => {
+  const mappedLines = traceback.split("\n").map((line) => {
     const m = line.match(/line \d+,/g);
     if (m) {
       const lineNum = parseInt(m[0].match(/\d+/) as any);
       const mappedLine = lineMapping[lineNum];
       if (mappedLine) {
         return line.replace(m[0], `line ${mappedLine},`);
+      }
+
+      if (line.match(INTERNAL_FUNC_NAME_USER_CODE)) {
+        return line.replace(m[0], `line 0,`);
       }
     }
 
