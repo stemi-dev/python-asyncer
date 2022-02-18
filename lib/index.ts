@@ -3,6 +3,6 @@ export { generateTest, GeneratedTest, TemplateTests } from "./generateTest";
 
 export { cleanup } from "./utils";
 
-export { tracebackFormatter } from "./helpers/traceback";
+export { tracebackFormatter, getLineMapping, mapTraceback } from "./helpers/traceback";
 
 export * from "./const";
