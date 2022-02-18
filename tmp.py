@@ -1,11 +1,12 @@
 import json
 import re
+import traceback
 
 
 index = -1
-inputs = ["Gayle","a"]
-expected_definitions = {"imeOsobe":"Gayle"}
-expected_outputs = ["Bok!","/.*Gayle.*/","/a\\..*/","/b\\..*/","/.*: a/","/.*/","/\\[.*,.*\\]/"]
+inputs = ["Eloy","a"]
+expected_definitions = {"imeOsobe":"Eloy"}
+expected_outputs = ["Bok!","/.*Eloy.*/","/a\\..*/","/b\\..*/","/.*: a/","/.*/","/\\[.*,.*\\]/"]
 expected_comments = ["None","None","None","None","None","None","None"]
 outputs = []
 
@@ -30,44 +31,45 @@ def custom_print(*args, **kwargs):
 async def internal_func_name_user_code():
     ex = None
     try:
-        popisPizza = ['1. Margherita(rajčica,sir)','2. Funghi(rajčica,sir,funghi)']
-        custom_print('Bok!')
-        imeOsobe = await custom_input('Ja sam PizzaBot. Kako se zoveš?' )
-        custom_print('Drago mi je ' + imeOsobe + '. Što želiš napraviti dalje:')
+         #|LINE_NUM:6|#
+        popisPizza = ['1. Margherita(rajčica,sir)','2. Funghi(rajčica,sir,funghi)'] #|LINE_NUM:7|#
+        custom_print('Bok!') #|LINE_NUM:8|#
+        imeOsobe = await custom_input('Ja sam PizzaBot. Kako se zoveš?' ) #|LINE_NUM:9|#
+        custom_print('Drago mi je ' + imeOsobe + '. Što želiš napraviti dalje:') #|LINE_NUM:10|#
         while_0 = 0
-        while True: # while_0
+        while True: #|LINE_NUM:11|# # while_0
             if while_0 >= 1000:
                 raise RuntimeError(f"Max number of iterations exceeded (1000) for while_0")
             while_0 = while_0 + 1
-            custom_print('a. Pokaži pizzu')
-            custom_print('b. Naruči pizzu')
-            izbor = await custom_input('Odaberi jednu od ponuđenih opcija: ')
-            if izbor == 'a':
-                custom_print('Odabrao si opciju: ' + izbor)
-                custom_print('Podnuđene pizze su: ')
-                custom_print(popisPizza)
-            elif izbor == 'b':
-                custom_print('Odabrao si opciju: ' + izbor + ' \\n')
-                custom_print('Podnuđene pizze su: ')
-                custom_print(popisPizza)
-                izborPizze = await custom_input('Koju pizzu' + imeOsobe + 'želiš naručiti? ')
-                if izborPizze == '1':
-                    custom_print('Tvoj izbor je Margherita')
-                    custom_print('Tvoj izbor je '+ popisPizza[0])
-                elif izborPizze == '2':
-                    custom_print('Tvoj izbor je Funghi')
-                    custom_print('Tvoj izbor je '+ popisPizza[1])
-                else:
-                    custom_print('Na žalost taj izbor nemamo u našem menu')
-            else:
-                custom_print('Došlo je do nesporazuma, nisi odabrao niti jednu ponuđenu opciju.')
-                custom_print('Molim te odaberi ponovno\\n')
-            break
-                
+            custom_print('a. Pokaži pizzu') #|LINE_NUM:12|#
+            custom_print('b. Naruči pizzu') #|LINE_NUM:13|#
+            izbor = await custom_input('Odaberi jednu od ponuđenih opcija: ') #|LINE_NUM:14|#
+            if izbor == 'a': #|LINE_NUM:15|#
+                custom_print('Odabrao si opciju: ' + izbor) #|LINE_NUM:16|#
+                custom_print('Podnuđene pizze su: ') #|LINE_NUM:17|#
+                custom_print(popisPizza) #|LINE_NUM:18|#
+            elif izbor == 'b': #|LINE_NUM:19|#
+                custom_print('Odabrao si opciju: ' + izbor + ' \\n') #|LINE_NUM:20|#
+                custom_print('Podnuđene pizze su: ') #|LINE_NUM:21|#
+                custom_print(popisPizza) #|LINE_NUM:22|#
+                izborPizze = await custom_input('Koju pizzu' + imeOsobe + 'želiš naručiti? ') #|LINE_NUM:23|#
+                if izborPizze == '1': #|LINE_NUM:24|#
+                    custom_print('Tvoj izbor je Margherita') #|LINE_NUM:25|#
+                    custom_print('Tvoj izbor je '+ popisPizza[0]) #|LINE_NUM:26|#
+                elif izborPizze == '2': #|LINE_NUM:27|#
+                    custom_print('Tvoj izbor je Funghi') #|LINE_NUM:28|#
+                    custom_print('Tvoj izbor je '+ popisPizza[1]) #|LINE_NUM:29|#
+                else: #|LINE_NUM:30|#
+                    custom_print('Na žalost taj izbor nemamo u našem menu') #|LINE_NUM:31|#
+            else: #|LINE_NUM:32|#
+                custom_print('Došlo je do nesporazuma, nisi odabrao niti jednu ponuđenu opciju.') #|LINE_NUM:33|#
+                custom_print('Molim te odaberi ponovno\\n') #|LINE_NUM:34|#
+            break #|LINE_NUM:35|#
+                 #|LINE_NUM:36|#
     except KillProgram:
         pass
     except Exception as e:
-        ex = e
+        ex = traceback.format_exc()
     finally:
         return locals(), ex
 
@@ -87,9 +89,9 @@ async def main():
     try:
         defines, exception = await internal_func_name_user_code()
         if exception:
-            return {"error": str(exception)}
+            return json.dumps({"error": exception})
     except Exception as e:
-        return {"error": str(e)}
+        return json.dumps({"error": str(e)})
 
     results = []
     for key in expected_definitions:
