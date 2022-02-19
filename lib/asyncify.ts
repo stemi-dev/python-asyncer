@@ -146,6 +146,8 @@ ${space(indents)}try:
 ${functionCode(indents)}
 ${space(indents)}except KillProgram:
 ${space(indents * 2)}pass
+${space(indents)}except WrongNumberOfInputs as e:
+${space(indents * 2)}ex = "WRONG_NUMBER_OF_INPUTS: Wrong number of inputs: " + str(e.index)
 ${space(indents)}except Exception as e:
 ${space(indents * 2)}ex = traceback.format_exc()
 ${space(indents)}finally:

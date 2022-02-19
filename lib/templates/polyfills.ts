@@ -26,9 +26,17 @@ class KillProgram(RuntimeError):
     pass
 
 
+class WrongNumberOfInputs(RuntimeError):
+    def __init__(self, index):
+        self.index = index
+
+
 async def ${input}(prompt: str = None):
     global index
     index += 1
+
+    if index >= len(inputs):
+        raise WrongNumberOfInputs(index)
 
     if inputs[index] == 'KILL_PROGRAM':
         raise KillProgram()
