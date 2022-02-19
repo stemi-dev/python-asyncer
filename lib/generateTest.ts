@@ -13,7 +13,11 @@ export type TemplateTests = {
   test: Test[];
 };
 
-export const generateTest = (json: TemplateTests, faker: Faker.FakerStatic): GeneratedTest => {
+export const generateTest = (
+  json: TemplateTests,
+  faker: Faker.FakerStatic,
+  endWithKill?: boolean
+): GeneratedTest => {
   const variables = Object.entries(json["variables"]).map(([key, value]) => {
     if (value.startsWith("faker.")) {
       return { key, value: eval(value).toString() };
@@ -48,7 +52,7 @@ export const generateTest = (json: TemplateTests, faker: Faker.FakerStatic): Gen
   };
 
   return {
-    input: decorateWithVariables("in"),
+    input: [...decorateWithVariables("in"), ...(endWithKill ? ["KILL_PROGRAM"] : [])],
     output: decorateWithVariables("out"),
     outputComments: decorateWithVariables("description"),
     defined: Object.fromEntries(
