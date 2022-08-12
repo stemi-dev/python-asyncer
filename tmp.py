@@ -4,10 +4,10 @@ import traceback
 
 
 index = -1
-inputs = ["Eloy","a"]
-expected_definitions = {"imeOsobe":"Eloy"}
-expected_outputs = ["Bok!","/.*Eloy.*/","/a\\..*/","/b\\..*/","/.*: a/","/.*/","/\\[.*,.*\\]/"]
-expected_comments = ["None","None","None","None","None","None","None"]
+inputs = ["78","14","28","Hassan"]
+expected_definitions = {"name":"Hassan","c":92,"c2":1092}
+expected_outputs = ["92","92","92","Your age is: 28","Hello Hassan","/\\w+ Hassan/"]
+expected_comments = ["None","None","None","None","None","None"]
 outputs = []
 
 
@@ -15,9 +15,17 @@ class KillProgram(RuntimeError):
     pass
 
 
+class WrongNumberOfInputs(RuntimeError):
+    def __init__(self, index):
+        self.index = index
+
+
 async def custom_input(prompt: str = None):
     global index
     index += 1
+
+    if index >= len(inputs):
+        raise WrongNumberOfInputs(index)
 
     if inputs[index] == 'KILL_PROGRAM':
         raise KillProgram()
@@ -31,43 +39,50 @@ def custom_print(*args, **kwargs):
 async def internal_func_name_user_code():
     ex = None
     try:
-         #|LINE_NUM:6|#
-        popisPizza = ['1. Margherita(rajčica,sir)','2. Funghi(rajčica,sir,funghi)'] #|LINE_NUM:7|#
-        custom_print('Bok!') #|LINE_NUM:8|#
-        imeOsobe = await custom_input('Ja sam PizzaBot. Kako se zoveš?' ) #|LINE_NUM:9|#
-        custom_print('Drago mi je ' + imeOsobe + '. Što želiš napraviti dalje:') #|LINE_NUM:10|#
+         #|LINE_NUM:3|#
+         #|LINE_NUM:4|#
+         #|LINE_NUM:5|#
+        async def pero(): #|LINE_NUM:6|#
+            age = int(await custom_input("Enter your age: ")) #|LINE_NUM:7|#
+            custom_print("Your age is:", age)  # + 1) #|LINE_NUM:8|#
+         #|LINE_NUM:9|#
+         #|LINE_NUM:10|#
+        a = int(await custom_input('a')) #|LINE_NUM:11|#
+        b = int(await custom_input('b')) #|LINE_NUM:12|#
+         #|LINE_NUM:13|#
+        c = a + b #|LINE_NUM:14|#
+        c2 = a * b #|LINE_NUM:15|#
+         #|LINE_NUM:16|#
+        for_0 = 0
+        for i in range(3): #|LINE_NUM:17|# # for_0
+            if for_0 >= 1000:
+                raise RuntimeError(f"Max number of iterations exceeded (1000) for for_0")
+            for_0 = for_0 + 1
+            custom_print(a + b) #|LINE_NUM:18|#
+         #|LINE_NUM:19|#
+        if 1 == 2: #|LINE_NUM:20|#
+            for k in range(10): #|LINE_NUM:21|#
+                custom_print('foo') #|LINE_NUM:22|#
+         #|LINE_NUM:23|#
+        pero() #|LINE_NUM:24|#
+         #|LINE_NUM:25|#
+        name = await custom_input('name')  # + '1' #|LINE_NUM:26|#
+        custom_print(f"Hello {name}") #|LINE_NUM:27|#
+        custom_print(f"Bok {name}") #|LINE_NUM:28|#
+         #|LINE_NUM:29|#
+        a = await custom_input('command') #|LINE_NUM:30|#
         while_0 = 0
-        while True: #|LINE_NUM:11|# # while_0
+        while a != 'exit': #|LINE_NUM:31|# # while_0
             if while_0 >= 1000:
                 raise RuntimeError(f"Max number of iterations exceeded (1000) for while_0")
             while_0 = while_0 + 1
-            custom_print('a. Pokaži pizzu') #|LINE_NUM:12|#
-            custom_print('b. Naruči pizzu') #|LINE_NUM:13|#
-            izbor = await custom_input('Odaberi jednu od ponuđenih opcija: ') #|LINE_NUM:14|#
-            if izbor == 'a': #|LINE_NUM:15|#
-                custom_print('Odabrao si opciju: ' + izbor) #|LINE_NUM:16|#
-                custom_print('Podnuđene pizze su: ') #|LINE_NUM:17|#
-                custom_print(popisPizza) #|LINE_NUM:18|#
-            elif izbor == 'b': #|LINE_NUM:19|#
-                custom_print('Odabrao si opciju: ' + izbor + ' \\n') #|LINE_NUM:20|#
-                custom_print('Podnuđene pizze su: ') #|LINE_NUM:21|#
-                custom_print(popisPizza) #|LINE_NUM:22|#
-                izborPizze = await custom_input('Koju pizzu' + imeOsobe + 'želiš naručiti? ') #|LINE_NUM:23|#
-                if izborPizze == '1': #|LINE_NUM:24|#
-                    custom_print('Tvoj izbor je Margherita') #|LINE_NUM:25|#
-                    custom_print('Tvoj izbor je '+ popisPizza[0]) #|LINE_NUM:26|#
-                elif izborPizze == '2': #|LINE_NUM:27|#
-                    custom_print('Tvoj izbor je Funghi') #|LINE_NUM:28|#
-                    custom_print('Tvoj izbor je '+ popisPizza[1]) #|LINE_NUM:29|#
-                else: #|LINE_NUM:30|#
-                    custom_print('Na žalost taj izbor nemamo u našem menu') #|LINE_NUM:31|#
-            else: #|LINE_NUM:32|#
-                custom_print('Došlo je do nesporazuma, nisi odabrao niti jednu ponuđenu opciju.') #|LINE_NUM:33|#
-                custom_print('Molim te odaberi ponovno\\n') #|LINE_NUM:34|#
-            break #|LINE_NUM:35|#
-                 #|LINE_NUM:36|#
+            custom_print('Wrong command') #|LINE_NUM:32|#
+            a = await custom_input('command') #|LINE_NUM:33|#
+         #|LINE_NUM:34|#
     except KillProgram:
         pass
+    except WrongNumberOfInputs as e:
+        ex = "WRONG_NUMBER_OF_INPUTS: Wrong number of inputs: " + str(e.index)
     except Exception as e:
         ex = traceback.format_exc()
     finally:
