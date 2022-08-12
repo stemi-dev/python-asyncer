@@ -8,7 +8,7 @@ if [ -d $PYODIDE_FOLDER ]; then
 fi
 
 mkdir $PYODIDE_FOLDER
-cd $PYODIDE_FOLDER
+cd $PYODIDE_FOLDER || exit
 
 wget https://github.com/pyodide/pyodide/releases/download/0.18.1/pyodide-build-0.18.1.tar.bz2
 tar -xf pyodide-build-0.18.1.tar.bz2
