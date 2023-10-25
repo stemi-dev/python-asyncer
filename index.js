@@ -55,18 +55,17 @@ var cleanup = (code) => {
   code = code.split("\n").map((line, index) => `${line} #|LINE_NUM:${index + 1}|#`).join("\n");
   code = code.replace(/\\n/g, "\\\\n");
   const tmp = code.split("f'''").join("#JOIN#").split('f"""').join("#JOIN#").split('"""').join("#JOIN#").split("'''").join("#JOIN#").split("#JOIN#");
-  const out = [];
+  let out = "";
   for (let i = 0; i < tmp.length; i++) {
     if (i % 2 === 0) {
-      out.push(tmp[i]);
+      out += tmp[i];
     } else {
       tmp[i] = tmp[i].replaceAll(/#\|LINE_NUM:[0-9]+\|#/gi, "");
       tmp[i] = "f'''" + tmp[i] + "'''";
-      console.log(tmp[i]);
-      out.push(tmp[i]);
+      out += tmp[i] + "\n";
     }
   }
-  const lines = out.join("\n").split("\n").filter((a) => !a.startsWith("#"));
+  const lines = out.split("\n").filter((a) => !a.startsWith("#"));
   if (process.env["asyncer_dev"] === "true") {
     return lines;
   }

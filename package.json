@@ -18,7 +18,7 @@
     "build:ts": "yarn tsc -P tsconfig.node.json",
     "build": "node ./scripts/build.js && yarn build:ts",
     "clean": "node ./scripts/cleanup.js",
-    "up": "node ./scripts/publish.js patch",
+    "up": "yarn clean && node ./scripts/publish.js patch",
     "up:minor": "yarn clean && node ./scripts/publish.js minor",
     "up:major": "yarn clean && node ./scripts/publish.js major"
   },

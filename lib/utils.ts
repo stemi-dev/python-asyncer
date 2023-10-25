@@ -12,21 +12,18 @@ export const cleanup = (code: string) => {
   code = code.replace(/\\n/g, "\\\\n");
   const tmp = code.split("f'''").join('#JOIN#').split('f"""').join("#JOIN#").split('"""').join('#JOIN#').split("'''").join('#JOIN#').split('#JOIN#');
 
-  const out: string[] = [];
+  let out = "";
   for (let i = 0; i < tmp.length; i++) {
     if (i % 2 === 0) {
-      out.push(tmp[i]);
-    }
-    else {
+      out += tmp[i]
+    } else {
       tmp[i] = (tmp[i] as any).replaceAll(/#\|LINE_NUM:[0-9]+\|#/gi, "");
       tmp[i] = "f'''" + tmp[i] + "'''";
-      console.log(tmp[i]);
-      out.push(tmp[i]);
+      out += tmp[i] + "\n"
     }
   }
 
   const lines = out
-    .join("\n")
     .split("\n")
     .filter((a) => !a.startsWith("#"));
 
