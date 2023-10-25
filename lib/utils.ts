@@ -18,7 +18,7 @@ export const cleanup = (code: string) => {
       out.push(tmp[i]);
     }
     else {
-      tmp[i] = tmp[i].replaceAll(/#\|LINE_NUM:[0-9]+\|#/gi, "");
+      tmp[i] = (tmp[i] as any).replaceAll(/#\|LINE_NUM:[0-9]+\|#/gi, "");
       tmp[i] = "f'''" + tmp[i] + "'''";
       console.log(tmp[i]);
       out.push(tmp[i]);
