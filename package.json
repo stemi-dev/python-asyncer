@@ -6,7 +6,7 @@
   "publishConfig": {
     "@stemi-dev:registry": "https://npm.pkg.github.com"
   },
-  "version": "4.6.2",
+  "version": "4.6.3",
   "description": "Package used for generating tests for the python runner + converting python code to async to be run in the browser",
   "keywords": [],
   "author": "Fran Zekan",
@@ -18,7 +18,7 @@
     "build:ts": "yarn tsc -P tsconfig.node.json",
     "build": "node ./scripts/build.js && yarn build:ts",
     "clean": "node ./scripts/cleanup.js",
-    "up": "yarn clean && node ./scripts/publish.js patch",
+    "up": "node ./scripts/publish.js patch",
     "up:minor": "yarn clean && node ./scripts/publish.js minor",
     "up:major": "yarn clean && node ./scripts/publish.js major"
   },
