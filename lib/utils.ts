@@ -7,17 +7,20 @@ export const space = (n: number) => {
 };
 
 export const cleanup = (code: string) => {
-  code = code
-    .split("\n")
-    .map((line, index) => `${line} #|LINE_NUM:${index + 1}|#`)
-    .join("\n");
 
+  code = code.split("\n").map((line, index) => `${line} #|LINE_NUM:${index + 1}|#`).join("\n");
   code = code.replace(/\\n/g, "\\\\n");
+  const tmp = code.split("f'''").join('#JOIN#').split('f"""').join("#JOIN#").split('"""').join('#JOIN#').split("'''").join('#JOIN#').split('#JOIN#');
 
-  const tmp = code.split('"""');
   const out: string[] = [];
   for (let i = 0; i < tmp.length; i++) {
     if (i % 2 === 0) {
+      out.push(tmp[i]);
+    }
+    else {
+      tmp[i] = tmp[i].replaceAll(/#\|LINE_NUM:[0-9]+\|#/gi, "");
+      tmp[i] = "f'''" + tmp[i] + "'''";
+      console.log(tmp[i]);
       out.push(tmp[i]);
     }
   }
