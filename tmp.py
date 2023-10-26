@@ -129,7 +129,7 @@ async def main():
             c = expected_comments[i]
 
             if b.startswith('/') and b.endswith('/'):
-                match = re.match(b[1:-1], a)
+                match = re.match(b[1:-1], a, re.DOTALL)
                 if match is None:
                     comment = c or f'REGEX "{a}" does not match "{b}"'
                     if comment == c:

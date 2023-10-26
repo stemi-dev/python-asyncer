@@ -117,7 +117,7 @@ async def main():
             b = expected_outputs[i]
 
             if b.startswith('/') and b.endswith('/'):
-                match = re.match(b[1:-1], a)
+                match = re.match(b[1:-1], a, re.DOTALL)
                 if match is None:
                     results.append(
                         Result(False, 'match', f'index[{i}]: REGEX "{a}" does not match "{b}"'))
