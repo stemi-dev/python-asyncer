@@ -54,7 +54,7 @@ async def internal_func_name_user_code():
         c2 = a * b #|LINE_NUM:15|#
          #|LINE_NUM:16|#
         for_0 = 0
-        for i in range(3): #|LINE_NUM:17|# # for_0
+        for i in range(3): #|LINE_NUM:17|#
             if for_0 >= 1000:
                 raise RuntimeError(f"Max number of iterations exceeded (1000) for for_0")
             for_0 = for_0 + 1
