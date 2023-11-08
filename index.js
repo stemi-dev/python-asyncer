@@ -53,7 +53,7 @@ var space = (n) => {
 };
 var cleanup = (code) => {
   code = code.split("\n").map((line, index) => `${line} #|LINE_NUM:${index + 1}|#`).join("\n");
-  code = code.replace(/\\n/g, "\\\\n");
+  code = code.replace(/\n/g, "\\\n");
   const tmp = code.split("f'''").join("#JOIN#").split('f"""').join("#JOIN#").split('"""').join("#JOIN#").split("'''").join("#JOIN#").split("#JOIN#");
   let out = "";
   for (let i = 0; i < tmp.length; i++) {
