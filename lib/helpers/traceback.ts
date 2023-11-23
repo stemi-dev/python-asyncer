@@ -44,8 +44,8 @@ export const tracebackFormatter = (
   stdio: Pick<Config, "stdioInput" | "stdioOutput">
 ) => {
   let output = mapTraceback(traceback, asyncifiedCode);
-  output = output.replace(new RegExp(stdio.stdioInput, "g"), "input");
-  output = output.replace(new RegExp(stdio.stdioOutput, "g"), "print");
+  output = output.replace(new RegExp(stdio.stdioInput, "g"), "input(");
+  output = output.replace(new RegExp(stdio.stdioOutput, "g"), "print(");
   output = output.replace(new RegExp(INTERNAL_FUNC_NAME_USER_CODE, "g"), "main");
 
   return output;

@@ -53,7 +53,7 @@ var space = (n) => {
 };
 var cleanup = (code) => {
   code = code.split("\n").map((line, index) => `${line} #|LINE_NUM:${index + 1}|#`).join("\n");
-  code = code.replace(/\\n/g, "\\\\n");
+  code = code.replace(/\n/g, "\\\n");
   const tmp = code.split("f'''").join("#JOIN#").split('f"""').join("#JOIN#").split('"""').join("#JOIN#").split("'''").join("#JOIN#").split("#JOIN#");
   let out = "";
   for (let i = 0; i < tmp.length; i++) {
@@ -61,6 +61,7 @@ var cleanup = (code) => {
       out += tmp[i];
     } else {
       tmp[i] = tmp[i].replaceAll(/#\|LINE_NUM:[0-9]+\|#/gi, "");
+      tmp[i] = tmp[i].replaceAll(/#\|LINE_NUM:[0-9]+\|#\//gi, "");
       tmp[i] = "f'''" + tmp[i] + "'''";
       out += tmp[i] + "\n";
     }
@@ -233,7 +234,7 @@ var asyncify = (raw, config, testData) => {
     };
   });
   const isDunder = (line) => line && line.startsWith("__") && line.endsWith("__");
-  const functionsToAwait = ["input", "sleep"];
+  const functionsToAwait = ["input(", "time.sleep("];
   parsed.forEach((line) => {
     var _a, _b;
     if (line.sob) {
@@ -259,8 +260,14 @@ var asyncify = (raw, config, testData) => {
       });
     }
     functionsToAwait.forEach((func) => {
+      line.line = line.line.replace(func, `await ${func}`);
       if (line.line.includes(func) && !line.sob) {
-        line.line = line.line.replace(func, `await ${func}`);
+        if (line.line.includes(func)) {
+          line.line.replace('))', ')))')
+        }
+        if (line.line.includes('time.sleep(')) {
+          line.line = line.line.replace('time.sleep', 'sleep')
+        }
       }
     });
     return line;
@@ -390,8 +397,8 @@ var mapTraceback = (traceback, asyncifiedCode) => {
 };
 var tracebackFormatter = (traceback, asyncifiedCode, stdio) => {
   let output = mapTraceback(traceback, asyncifiedCode);
-  output = output.replace(new RegExp(stdio.stdioInput, "g"), "input");
-  output = output.replace(new RegExp(stdio.stdioOutput, "g"), "print");
+  output = output.replace(new RegExp(stdio.stdioInput, "g"), "input(");
+  output = output.replace(new RegExp(stdio.stdioOutput, "g"), "print(");
   output = output.replace(new RegExp(INTERNAL_FUNC_NAME_USER_CODE, "g"), "main");
   return output;
 };
