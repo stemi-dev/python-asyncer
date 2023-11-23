@@ -51,7 +51,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
 
   const isDunder = (line?: string) => line && line.startsWith("__") && line.endsWith("__");
 
-  const functionsToAwait = ["input", "sleep"];
+  const functionsToAwait = ["input(", "time.sleep("];
   parsed.forEach((line) => {
     if (line.sob) {
       let methodName: string | undefined;
@@ -85,8 +85,14 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
     }
 
     functionsToAwait.forEach((func) => {
+      line.line = line.line.replace(func, `await ${func}`);
       if (line.line.includes(func) && !line.sob) {
-        line.line = line.line.replace(func, `await ${func}`);
+        if (line.line.includes(func)) {
+          line.line.replace('))', ')))')
+        }
+        if (line.line.includes('time.sleep(')) {
+          line.line = line.line.replace('time.sleep', 'sleep')
+        }
       }
     });
 
