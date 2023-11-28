@@ -9,7 +9,7 @@ export const space = (n: number) => {
 export const cleanup = (code: string) => {
 
   code = code.split("\n").map((line, index) => `${line} #|LINE_NUM:${index + 1}|#`).join("\n");
-  code = code.replace(/\n/g, "\\\n");
+  code = code.replace(/\\n/g, "\\\\n");
   const tmp = code.split("f'''").join('#JOIN#').split('f"""').join("#JOIN#").split('"""').join('#JOIN#').split("'''").join('#JOIN#').split('#JOIN#');
 
   let out = "";
