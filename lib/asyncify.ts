@@ -129,6 +129,30 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
     replaces.forEach(([from, to]) => {
       if (line.line.includes(from)) {
         line.line = line.line.replace(from, to);
+        // Wrap await custom input
+        if (line.line.includes("await")) {
+          let closePosition = -1;
+          let openCounter = 0;
+          for(let c = 0; c < line.line.length; c+=1) {
+            if (line.line[c] == "(") {
+              openCounter += 1;
+            } else if (line.line[c] == ")") {
+              openCounter -= 1;
+              if (openCounter == 0) {
+                closePosition = c;
+                break;
+              } 
+            }
+          }
+          if (closePosition == -1) {
+            return;
+          }
+          const awaitPosition = line.line.indexOf("await");
+          line.line = line.line.substr(0, awaitPosition) + "(" + line.line.substr(awaitPosition);
+          closePosition += 1;
+          line.line = line.line.substr(0, closePosition) + ")" + line.line.substr(closePosition);
+          console.log(line.line);
+        }
       }
     });
 
