@@ -42,7 +42,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
     return {
       line: line.slice(indent?.length || 0),
       sob: line.endsWith(":"),
-      loop: line.startsWith("for") ? "for" : line.startsWith("while") ? "while" : false,
+      loop: line.startsWith("for ") ? "for" : line.startsWith("while ") ? "while" : false,
       indent: indent?.length || 0,
     };
   });
