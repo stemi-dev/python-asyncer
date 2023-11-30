@@ -23,9 +23,19 @@ export const cleanup = (code: string) => {
     }
   }
 
-  const lines = out
+
+  let lines = out
     .split("\n")
     .filter((a) => !a.startsWith("#"));
+  
+  for (let x=0; x<lines.length; x++){
+      if (lines[x].includes("\\\\n")) {
+      lines[x] = lines[x].replace("\\\\n", "\\n");
+    }    
+  };
+
+  lines = lines
+          .forEach((l) => l.includes("\\\\n") ? l.replace("\\\\n", "\\n"));
 
   if (process.env["asyncer_dev"] === "true") {
     return lines;
