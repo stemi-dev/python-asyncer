@@ -136,7 +136,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
           for(let c = 0; c < line.line.length; c+=1) {
             if (line.line[c] == "(") {
               openCounter += 1;
-            } else if (line.line[c]o == ")") {
+            } else if (line.line[c] == ")") {
               openCounter -= 1;
               if (openCounter == 0) {
                 closePosition = c;
