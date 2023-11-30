@@ -1,7 +1,7 @@
 {
   "extends": "./node_modules/zeko369-tsconfig/configs/js/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2021",
     "checkJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,
