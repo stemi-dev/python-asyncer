@@ -42,7 +42,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
     return {
       line: line.slice(indent?.length || 0),
       sob: line.endsWith(":"),
-      loop: line.startsWith("for") ? "for" : line.startsWith("while") ? "while" : false,
+      loop: line.startsWith("for ") ? "for" : line.startsWith("while ") ? "while" : false,
       indent: indent?.length || 0,
     };
   });
@@ -136,7 +136,7 @@ export const asyncify = (raw: string, config?: Partial<Config>, testData?: Gener
           for(let c = 0; c < line.line.length; c+=1) {
             if (line.line[c] == "(") {
               openCounter += 1;
-            } else if (line.line[c] == ")") {
+            } else if (line.line[c]o == ")") {
               openCounter -= 1;
               if (openCounter == 0) {
                 closePosition = c;
