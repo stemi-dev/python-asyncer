@@ -29,8 +29,6 @@ export const cleanup = (code: string) => {
     .filter((a) => !a.startsWith("#"));
   
     lines = lines.map((el) => el.includes("\\\\n") ? el.replaceAll("\\\\n", "\\n") : el);
-    lines = lines.map((el) => el.includes("def chatbot(") ? el.replaceAll("def chatbot(", "async def chatbot(") : el);
-    lines = lines.map((el) => (el.includes("chatbot(") && !el.includes("def chatbot(")) ? el.replaceAll("chatbot(", "await chatbot(") : el);
 
   if (process.env["asyncer_dev"] === "true") {
     return lines;
