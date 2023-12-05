@@ -65,7 +65,8 @@ var cleanup = (code) => {
       out += tmp[i] + "\n";
     }
   }
-  const lines = out.split("\n").filter((a) => !a.startsWith("#"));
+  let lines = out.split("\n").filter((a) => !a.startsWith("#"));
+  lines = lines.map((el) => el.includes("\\\\n") ? el.replaceAll("\\\\n", "\\n") : el);
   if (process.env["asyncer_dev"] === "true") {
     return lines;
   }
@@ -228,7 +229,7 @@ var asyncify = (raw, config, testData) => {
     return {
       line: line.slice((indent == null ? void 0 : indent.length) || 0),
       sob: line.endsWith(":"),
-      loop: line.startsWith("for") ? "for" : line.startsWith("while") ? "while" : false,
+      loop: line.startsWith("for ") ? "for" : line.startsWith("while ") ? "while" : false,
       indent: (indent == null ? void 0 : indent.length) || 0
     };
   });

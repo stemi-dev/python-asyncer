@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "lib": ["ES2021"],
     "declarationDir": "."
   },
   "exclude": ["./example", "./pyodide", "./dist", "./scripts", "./index.js"]
