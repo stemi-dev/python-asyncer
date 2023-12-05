@@ -8,6 +8,10 @@ export const space = (n: number) => {
 
 export const cleanup = (code: string) => {
 
+  let funcRegex = new RegExp(/def .*\(/, 'g');
+  let funcs = code.match(funcRegex);
+  let func,funcName;
+
   code = code.split("\n").map((line, index) => `${line} #|LINE_NUM:${index + 1}|#`).join("\n");
   code = code.replace(/\\n/g, "\\\\n");
   const tmp = code.split("f'''").join('#JOIN#').split('f"""').join("#JOIN#").split('"""').join('#JOIN#').split("'''").join('#JOIN#').split('#JOIN#');
@@ -29,6 +33,15 @@ export const cleanup = (code: string) => {
     .filter((a) => !a.startsWith("#"));
   
     lines = lines.map((el) => el.includes("\\\\n") ? el.replaceAll("\\\\n", "\\n") : el);
+    
+  if (funcs) funcs.forEach((fnel) => {
+    func = fnel.substr(0, fnel.length-2);
+    funcName = func.substr(4, func.length-2);
+    console.log(funcName);
+
+    lines = lines.map((el) => el.includes(func) ? el.replaceAll(func, "async " + func) : el);
+    lines = lines.map((el) => (el.includes(funcName) && !el.includes(func)) ? el.replaceAll(funcName, "await " + funcName) : el);
+  });
 
   if (process.env["asyncer_dev"] === "true") {
     return lines;
