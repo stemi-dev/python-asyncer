@@ -8,7 +8,7 @@ export const space = (n: number) => {
 
 export const cleanup = (code: string) => {
 
-  let funcRegex = new RegExp(/def (.*)()/, 'g');
+  let funcRegex = new RegExp(/def .*\(/, 'g');
   let funcs = code.match(funcRegex);
   let func,funcName;
 
