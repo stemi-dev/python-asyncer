@@ -1,4 +1,5 @@
 import { GeneratedTest } from "./generateTest";
+import modules from "./modules";
 
 export const space = (n: number) => {
   return Array.from(new Array(n))
@@ -6,8 +7,26 @@ export const space = (n: number) => {
     .join("");
 };
 
-export const cleanup = (code: string) => {
+export const addCustomModules = (code: string) => {
 
+  let lines = code.split("\n");
+
+  const moduleNames = Object.keys(modules);
+  moduleNames.forEach((moduleName) => {
+    lines = lines.map((line) => {
+      if (line.includes(`from ${moduleName} import`)) {
+        line = modules[moduleName];
+      }
+      return line;
+    });
+  });
+
+  const newCode = lines.join("\n");
+  return newCode;
+}
+
+export const cleanup = (code: string) => {
+  code = addCustomModules(code);
   let funcRegex = new RegExp(/def .*\(/, 'g');
   let funcs = code.match(funcRegex);
   if (funcs) {

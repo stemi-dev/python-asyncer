@@ -4,9 +4,9 @@ import traceback
 
 
 index = -1
-inputs = ["78","14","28","Hassan"]
-expected_definitions = {"name":"Hassan","c":92,"c2":1092}
-expected_outputs = ["92","92","92","Your age is: 28","Hello Hassan","/\\w+ Hassan/"]
+inputs = ["46","84","36","Cecelia"]
+expected_definitions = {"name":"Cecelia","c":130,"c2":3864}
+expected_outputs = ["130","130","130","Your age is: 36","Hello Cecelia","/\\w+ Cecelia/"]
 expected_comments = ["None","None","None","None","None","None"]
 outputs = []
 
@@ -39,46 +39,17 @@ def custom_print(*args, **kwargs):
 async def internal_func_name_user_code():
     ex = None
     try:
+         #|LINE_NUM:1|#
+        from pyodide.http import pyfetch #|LINE_NUM:2|#
          #|LINE_NUM:3|#
-         #|LINE_NUM:4|#
-         #|LINE_NUM:5|#
-        async def pero(): #|LINE_NUM:6|#
-            age = int(await custom_input("Enter your age: ")) #|LINE_NUM:7|#
-            custom_print("Your age is:", age)  # + 1) #|LINE_NUM:8|#
+        async def get(url): #|LINE_NUM:4|#
+            response = await pyfetch(url) #|LINE_NUM:5|#
+            return response #|LINE_NUM:6|#
+         #|LINE_NUM:7|#
+         #|LINE_NUM:8|#
          #|LINE_NUM:9|#
-         #|LINE_NUM:10|#
-        a = int(await custom_input('a')) #|LINE_NUM:11|#
-        b = int(await custom_input('b')) #|LINE_NUM:12|#
-         #|LINE_NUM:13|#
-        c = a + b #|LINE_NUM:14|#
-        c2 = a * b #|LINE_NUM:15|#
-         #|LINE_NUM:16|#
-        for_0 = 0
-        for i in range(3): #|LINE_NUM:17|#
-            if for_0 >= 1000:
-                raise RuntimeError(f"Max number of iterations exceeded (1000) for for_0")
-            for_0 = for_0 + 1
-            custom_print(a + b) #|LINE_NUM:18|#
-         #|LINE_NUM:19|#
-        if 1 == 2: #|LINE_NUM:20|#
-            for k in range(10): #|LINE_NUM:21|#
-                custom_print('foo') #|LINE_NUM:22|#
-         #|LINE_NUM:23|#
-        pero() #|LINE_NUM:24|#
-         #|LINE_NUM:25|#
-        name = await custom_input('name')  # + '1' #|LINE_NUM:26|#
-        custom_print(f"Hello {name}") #|LINE_NUM:27|#
-        custom_print(f"Bok {name}") #|LINE_NUM:28|#
-         #|LINE_NUM:29|#
-        a = await custom_input('command') #|LINE_NUM:30|#
-        while_0 = 0
-        while a != 'exit': #|LINE_NUM:31|# # while_0
-            if while_0 >= 1000:
-                raise RuntimeError(f"Max number of iterations exceeded (1000) for while_0")
-            while_0 = while_0 + 1
-            custom_print('Wrong command') #|LINE_NUM:32|#
-            a = await custom_input('command') #|LINE_NUM:33|#
-         #|LINE_NUM:34|#
+        r = await get("https://randomuser.me/api/") #|LINE_NUM:10|#
+        t = await (r.json()) #|LINE_NUM:11|#
     except KillProgram:
         pass
     except WrongNumberOfInputs as e:
