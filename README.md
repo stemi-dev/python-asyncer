@@ -2,8 +2,8 @@
 
 `yarn clean`
 
-`yarn build`
-
 `yarn up:minor`
+
+`yarn build`
 
 `yarn publish`
