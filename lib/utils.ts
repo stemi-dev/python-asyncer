@@ -59,12 +59,16 @@ export const cleanup = (code: string) => {
   if (funcs) funcs.forEach((fnel) => {
     if (fnel) {
       // func je ime funkcije sa def ( def foobar( ), funcName je samo ime funkcije
-      func = fnel.substr(0, fnel.length-2);
-      funcName = func.substr(4, func.length-1);
+      const openIndex = fnel.indexOf("(")
+      func = fnel.substr(0, openIndex);
+      funcName = func.substr(4, openIndex);
+
+      const re1 = new RegExp(func + '\\s*' + "\\(")
+      const re2 = new RegExp(funcName + '\\s*' + "\\(")
       
       // prolazi sve cleanup-ane linije, ako nemaju async def i sadrze definicju funkcije ili ime funkcije mijenjamo sa await/async
-      lines = lines.map((el) => (el.includes(func) && !el.includes("async def")) ? (el as any).replaceAll(func, "async " + func) : el);
-      lines = lines.map((el) => (el.includes(funcName) && !el.includes(func) && !el.includes("async def")) ? (el as any).replaceAll(funcName, "await " + funcName) : el);
+      lines = lines.map((el) => (el.match(re1) && !el.includes("async def")) ? (el as any).replaceAll(func, "async " + func) : el);
+      lines = lines.map((el) => (el.match(re2) && !el.match(re1) && !el.includes("async def")) ? (el as any).replaceAll(funcName, "await " + funcName) : el);
     }
   });
 

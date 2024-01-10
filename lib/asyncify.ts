@@ -162,13 +162,13 @@ export const asyncify = (
   }, []);
 
   const replaces = [
-    ["print(", `${stdioOutput}(`],
-    ["input(", `${stdioInput}(`],
+    [RegExp("print\\s*\\("), `${stdioOutput}(`],
+    [RegExp("input\\s*\\("), `${stdioInput}(`],
   ];
   const withCustomSTDIO = withLoopLimiters.map((line) => {
     replaces.forEach(([from, to]) => {
-      if (line.line.includes(from)) {
-        line.line = line.line.replace(from, to);
+      if (line.line.match(from)) {
+        line.line = line.line.replace(from, to as string);
         // Wrap await custom input
         if (line.line.includes("await")) {
           let closePosition = -1;
@@ -197,7 +197,6 @@ export const asyncify = (
             line.line.substr(0, closePosition) +
             ")" +
             line.line.substr(closePosition);
-          console.log(line.line);
         }
       }
     });

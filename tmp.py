@@ -4,9 +4,9 @@ import traceback
 
 
 index = -1
-inputs = ["46","84","36","Cecelia"]
-expected_definitions = {"name":"Cecelia","c":130,"c2":3864}
-expected_outputs = ["130","130","130","Your age is: 36","Hello Cecelia","/\\w+ Cecelia/"]
+inputs = ["32","14","15","Esperanza"]
+expected_definitions = {"name":"Esperanza","c":46,"c2":448}
+expected_outputs = ["46","46","46","Your age is: 15","Hello Esperanza","/\\w+ Esperanza/"]
 expected_comments = ["None","None","None","None","None","None"]
 outputs = []
 
@@ -39,17 +39,97 @@ def custom_print(*args, **kwargs):
 async def internal_func_name_user_code():
     ex = None
     try:
-         #|LINE_NUM:1|#
-        from pyodide.http import pyfetch #|LINE_NUM:2|#
-         #|LINE_NUM:3|#
-        async def get(url): #|LINE_NUM:4|#
-            response = await pyfetch(url) #|LINE_NUM:5|#
-            return response #|LINE_NUM:6|#
+        f''' 
+        FUTURE CLASSROOM - PYTHON FUNDAMENTALS 
+        PROJECT NAME: DISH FINDER CHATBOT 
+        LESSON 17 
+        BY: KODING NEXT 
+         
+        '''
          #|LINE_NUM:7|#
          #|LINE_NUM:8|#
          #|LINE_NUM:9|#
-        r = await get("https://randomuser.me/api/") #|LINE_NUM:10|#
-        t = await (r.json()) #|LINE_NUM:11|#
+        from pyodide.http import pyfetch #|LINE_NUM:10|#
+         #|LINE_NUM:11|#
+        async def get(url): #|LINE_NUM:12|#
+            response = await pyfetch(url) #|LINE_NUM:13|#
+            response.status_code = response.status #|LINE_NUM:14|#
+            return response #|LINE_NUM:15|#
+         #|LINE_NUM:16|#
+         #|LINE_NUM:17|#
+         #|LINE_NUM:18|#
+        custom_print("Welcome to Dish Finder Chatbot!") #|LINE_NUM:20|#
+        custom_print("You can look for a recipe for a certain dish, or...") #|LINE_NUM:21|#
+        custom_print("We can give surprise to generate a random dish recipe.") #|LINE_NUM:22|#
+        custom_print("The choice is yours.") #|LINE_NUM:23|#
+        (await custom_input('')) #|LINE_NUM:24|#
+        custom_input() #|LINE_NUM:25|#
+         #|LINE_NUM:26|#
+         #|LINE_NUM:27|#
+        base_url = "https://www.themealdb.com/api/json/v1/1/" #|LINE_NUM:29|#
+         #|LINE_NUM:30|#
+        while_0 = 0
+        while True: #|LINE_NUM:31|# # while_0
+            if while_0 >= 1000:
+                raise RuntimeError(f"Max number of iterations exceeded (1000) for while_0")
+            while_0 = while_0 + 1
+            # Offer options for interaction #|LINE_NUM:32|#
+            custom_print("") #|LINE_NUM:33|#
+            custom_print("What food dish recipe would you like to look for today?") #|LINE_NUM:34|#
+         #|LINE_NUM:35|#
+            options = [ #|LINE_NUM:36|#
+                "Tell me a random recipe.", #|LINE_NUM:37|#
+                "Search for a specific dish.", #|LINE_NUM:38|#
+                "Quit.", #|LINE_NUM:39|#
+            ] #|LINE_NUM:40|#
+         #|LINE_NUM:41|#
+            for i, option in enumerate(options): #|LINE_NUM:42|#
+                custom_print(f"{i+1}. {option}") #|LINE_NUM:43|#
+         #|LINE_NUM:44|#
+            # Get user choice and handle actions #|LINE_NUM:45|#
+            custom_print("") #|LINE_NUM:46|#
+            choice = int((await custom_input("Enter your choice: "))) #|LINE_NUM:47|#
+         #|LINE_NUM:48|#
+            if choice == 1: #|LINE_NUM:49|#
+                # Fetch a random recipe #|LINE_NUM:50|#
+                random_recipe_url = f"{base_url}random.php" #|LINE_NUM:51|#
+                response = await get (random_recipe_url) #|LINE_NUM:52|#
+                response = await (response.json()) #|LINE_NUM:53|#
+                recipe = response["meals"][0] #|LINE_NUM:54|#
+                custom_print("") #|LINE_NUM:55|#
+                custom_print(f"Let's make {recipe['strMeal']}!") #|LINE_NUM:56|#
+                custom_print("") #|LINE_NUM:57|#
+                custom_print(f"{recipe['strInstructions']}") #|LINE_NUM:58|#
+                image_url = recipe["strMealThumb"] #|LINE_NUM:59|#
+                custom_print("") #|LINE_NUM:60|#
+                custom_print(f"Dish image: {image_url}") #|LINE_NUM:61|#
+         #|LINE_NUM:62|#
+            elif choice == 2: #|LINE_NUM:63|#
+                # Search for a specific dish #|LINE_NUM:64|#
+                dish_name = (await custom_input("Enter the name of the dish you're craving: ")).lower() #|LINE_NUM:65|#
+                search_url = f"{base_url}search.php?s={dish_name}" #|LINE_NUM:66|#
+                response = await get(search_url) #|LINE_NUM:67|#
+                response = await (response.json()) #|LINE_NUM:68|#
+         #|LINE_NUM:69|#
+                if response["meals"]: #|LINE_NUM:70|#
+                    recipe = response["meals"][0] #|LINE_NUM:71|#
+                    custom_print("") #|LINE_NUM:72|#
+                    custom_print(f"Found it! Let's make {recipe['strMeal']}.") #|LINE_NUM:73|#
+                    custom_print("") #|LINE_NUM:74|#
+                    custom_print(f"{recipe['strInstructions']}") #|LINE_NUM:75|#
+                    image_url = recipe["strMealThumb"] #|LINE_NUM:76|#
+                    custom_print("") #|LINE_NUM:77|#
+                    custom_print(f"Drool-worthy image here: {image_url}") #|LINE_NUM:78|#
+                else: #|LINE_NUM:79|#
+                    custom_print(f"Sorry, couldn't find that dish. Try a different name or browse the popular options!") #|LINE_NUM:80|#
+         #|LINE_NUM:81|#
+            elif choice == 3: #|LINE_NUM:82|#
+                # Quit and save cravings #|LINE_NUM:83|#
+                custom_print("Bon appétit! See you next time your tummy starts rumbling.") #|LINE_NUM:84|#
+                break #|LINE_NUM:85|#
+         #|LINE_NUM:86|#
+            else: #|LINE_NUM:87|#
+                custom_print("Invalid choice. Please try again.") #|LINE_NUM:88|#
     except KillProgram:
         pass
     except WrongNumberOfInputs as e:
