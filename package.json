@@ -6,7 +6,7 @@
   "publishConfig": {
     "@stemi-dev:registry": "https://npm.pkg.github.com"
   },
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "Package used for generating tests for the python runner + converting python code to async to be run in the browser",
   "keywords": [],
   "author": "Fran Zekan",
