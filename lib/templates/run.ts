@@ -43,7 +43,7 @@ async def ${MAIN_FUNCTION}():
     else:
         results.append(Result(True, 'number_of_prints', 'Correct number of prints'))
 
-        for i in range(len(outputs)):
+        for i in range(len(expected_outputs)):
             a = " ".join(map(lambda x: str(x), list(outputs[i])))
             b = expected_outputs[i]
             c = expected_comments[i]
