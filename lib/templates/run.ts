@@ -38,7 +38,7 @@ async def ${MAIN_FUNCTION}():
         else:
             results.append(Result(True, 'defined', key))
 
-    if len(outputs) != len(expected_outputs):
+    if len(outputs) < len(expected_outputs):
         results.append(Result(False, 'number_of_prints', f'You had {len(outputs)} print{"" if len(outputs) == 1 else "s"}, but this test expected you to have {len(expected_outputs)} print{"" if len(expected_outputs) == 1 else "s"}', verbose=[outputs, expected_outputs]))
     else:
         results.append(Result(True, 'number_of_prints', 'Correct number of prints'))
