@@ -141,7 +141,7 @@ def ${print}(*args, **kwargs):
   print(*args, **kwargs)`,
   browser: ({ print }) => `def print_mock(*args, **kwargs):
   outputs = []
-  for arg in kwargs:
+  for arg in args:
     if type(arg) == float and arg.is_integer():
       outputs.append(str(arg))
     else:
@@ -174,11 +174,11 @@ async def ${input}(prompt: str = None):
         raise KillProgram()
 
     return inputs[index]
-    `
+
+
+def ${print}(*args, **kwargs):
+    outputs.append(args)`
 };
-// def ${print}(*args, **kwargs):
-//     outputs.append(args)`
-// };
 
 // lib/templates/run.ts
 var run = {
