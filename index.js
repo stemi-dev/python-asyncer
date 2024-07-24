@@ -112,7 +112,7 @@ var cleanup = (code) => {
     if (openMultiline) {
       el = el.trim();
     }
-    if (el.includes("'''") || el.includes('""""')){
+    if (el.includes("'''") || el.includes('"""')){
       openMultiline = !openMultiline
     }
     return el;
