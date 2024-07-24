@@ -94,7 +94,6 @@ var cleanup = (code) => {
   code = code.split("\n").map((line, index) => `${line} #|LINE_NUM:${index + 1}|#`).join("\n");
   code = code.replace(/\\n/g, "\\\\n");
   const tmp = code.split("f'''").join("#JOIN#").split('f"""').join("#JOIN#").split('"""').join("#JOIN#").split("'''").join("#JOIN#").split("#JOIN#");
-  console.log(tmp)
   let out = "";
   for (let i = 0; i < tmp.length; i++) {
     if (i % 2 === 0) {
@@ -137,7 +136,6 @@ var cleanup = (code) => {
   return lines.filter((a) => a.length > 0);
 };
 var formatTestData = (data) => {
-  console.log(data);
   return `inputs = ${JSON.stringify(data.input)}
 expected_definitions = ${JSON.stringify(data.defined)}
 expected_outputs = ${JSON.stringify(data.output)}
