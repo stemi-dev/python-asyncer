@@ -44,12 +44,14 @@ export const asyncify = (
   // detect indents
   const parsed: Line[] = lines.map((line) => {
     const indent = line.match(/^\s*/)?.[0];
+    const strippedLine = line.slice(indent?.length || 0);
+    const lineWithoutAnnotation = line.replace(/\s*#\|LINE_NUM:\d+\|#\s*$/, '');
     return {
-      line: line.slice(indent?.length || 0),
-      sob: line.endsWith(":"),
-      loop: line.startsWith("for ")
+      line: strippedLine,
+      sob: lineWithoutAnnotation.trimEnd().endsWith(":"),
+      loop: strippedLine.startsWith("for ")
         ? "for"
-        : line.startsWith("while ")
+        : strippedLine.startsWith("while ")
         ? "while"
         : false,
       indent: indent?.length || 0,
@@ -129,41 +131,57 @@ export const asyncify = (
   };
 
   let loopIndex = 0;
-  const withLoopLimiters = withAsyncAwait.reduce<Line[]>((all, l) => {
+  const withLoopLimiters: Line[] = [];
+  for (let i = 0; i < withAsyncAwait.length; i++) {
+    const l = withAsyncAwait[i];
     if (l.loop) {
       const varName = `${l.loop}_${loopIndex}`;
-      const out: Line[] = [
+
+      // Detect actual body indentation from the next non-empty line
+      let bodyIndent = l.indent + indents; // fallback
+      for (let j = i + 1; j < withAsyncAwait.length; j++) {
+        const nextLine = withAsyncAwait[j];
+        // Skip lines that are just #|LINE_NUM| annotations (originally blank)
+        if (/^#\|LINE_NUM:\d+\|#$/.test(nextLine.line.trim())) continue;
+        if (nextLine.indent > l.indent) {
+          bodyIndent = nextLine.indent;
+        }
+        break;
+      }
+      const indentStep = bodyIndent - l.indent;
+
+      withLoopLimiters.push(
         { ...l, line: `${varName} = 0`, sob: false },
         { ...l, line: `${l.line} # ${varName}` },
         {
           ...l,
           line: `if ${varName} >= ${maxIterations}:`,
-          indent: l.indent + indents,
+          indent: bodyIndent,
           sob: true,
         },
         {
           ...l,
           line: maxIterError(varName),
-          indent: l.indent + indents * 2,
+          indent: bodyIndent + indentStep,
           sob: false,
         },
         {
           ...l,
           line: `${varName} = ${varName} + 1`,
-          indent: l.indent + indents,
+          indent: bodyIndent,
           sob: false,
         },
-      ];
+      );
 
-      return [...all, ...out];
+      loopIndex++;
+    } else {
+      withLoopLimiters.push(l);
     }
-
-    return [...all, l];
-  }, []);
+  }
 
   const replaces = [
-    [RegExp("print\\s*\\("), `${stdioOutput}(`],
-    [RegExp("input\\s*\\("), `${stdioInput}(`],
+    [RegExp("print\\s*\\(", "g"), `${stdioOutput}(`],
+    [RegExp("input\\s*\\(", "g"), `${stdioInput}(`],
   ];
   const withCustomSTDIO = withLoopLimiters.map((line) => {
     replaces.forEach(([from, to]) => {
