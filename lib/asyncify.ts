@@ -137,11 +137,9 @@ export const asyncify = (
     if (l.loop) {
       const varName = `${l.loop}_${loopIndex}`;
 
-      // Detect actual body indentation from the next non-empty line
-      let bodyIndent = l.indent + indents; // fallback
+      let bodyIndent = l.indent + indents; 
       for (let j = i + 1; j < withAsyncAwait.length; j++) {
         const nextLine = withAsyncAwait[j];
-        // Skip lines that are just #|LINE_NUM| annotations (originally blank)
         if (/^#\|LINE_NUM:\d+\|#$/.test(nextLine.line.trim())) continue;
         if (nextLine.indent > l.indent) {
           bodyIndent = nextLine.indent;
